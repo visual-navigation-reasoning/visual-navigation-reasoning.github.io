@@ -1,10 +1,789 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Reasonning in visual navigation</title>
+    <!-- Favicon-->
+    <!--    <link rel="icon" type="image/x-icon" href="assets/favicon.ico"/>-->
+
+    <!-- Core theme CSS (includes Bootstrap)-->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+
+    <link href="css/custom_styles.css" rel="stylesheet"/>
+    <!-- FontAwesome CDN  -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet"/>
+
+    <!-- MathJax -->
+    <script type="text/javascript" id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+    <!-- d3.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+
 </head>
 <body>
+<!-- Responsive navbar-->
+<nav class="navbar navbar-expand-lg" style="background-color: #0a53be">
+    <div class="container ">
+        <a class="navbar-brand text-white" href="#">Reasonning in Visual Navigation</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+                class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse " id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ">
+                <li class="nav-item "><a class="nav-link active text-white" aria-current="page" href="#">Home</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="#abstract">Abstract</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" id="navbarDropdown" href="#" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">Results</a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#dynamical-agent">Dynamical agent</a></li>
+                        <li><a class="dropdown-item" href="#prediction-or-correction">Prediction vs. Correction</a></li>
+                        <li><a class="dropdown-item" href="#occupancy-map">Occupancy maps</a></li>
+                        <li><a class="dropdown-item" href="#cost-map">Cost heatmaps</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link text-white" href="#">Cite</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-<h1>Hello World!</h1>
+<!-- Page content-->
+<div class="container">
+    <div class="text-center mt-5">
+        <h1>Reasoning in Visual Navigation of End-to-end Trained Agents:</h1>
+        <h2 style="margin-bottom: 25px">A Dynamical Systems Approach</h2>
+        <p class="lead">Anonymous authors</p>
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col btn btn-primary">
+                <i class="fas fa-file-pdf fa-2x"></i>
+                <span>PDF (coming soon)</span>
+            </div>
+            <div class="col-4"></div>
+        </div>
+    </div>
+</div>
 
+<br/>
+<br/>
+
+<!-- Abstract -->
+<div class="container mt-5" id="abstract">
+    <p class="section-title">Abstract</p>
+    <p style="padding-left:15px">
+        Progress in embodied AI has led to end-to-end trained agents navigating in real photo-realistic environments
+        capable of high-level reasoning and zero-shot or language conditioned behavior, with evaluations and benchmarks
+        dominated by simulation. In this work, we focus on the behavior of fast-moving real robots and fine-grained
+        behavior and present a large-scale experimental study involving 142 navigation episodes in a real environment
+        and done with a real physical robot, analyzing the type of reasoning emerging from end-to-end training. In
+        particular, we study the presence of realistic dynamics learned by the agent and used for open-loop forecasting,
+        and its interplay with sensing. We analyze the way the agent uses latent memory and show that it holds elements
+        of the scene structure and exploration information. We probe the agent's planning capabilities, and while we did
+        not find evidence in precise motion plans in the agent's memory, in post-hoc analysis we show that its learned
+        value function is linked to long-term plans. Put together, the experiments paint a new picture on how using
+        tools from computer vision and sequential decision taking have led to new capabilities in robotics and control.
+    </p>
+
+</div>
+
+<!-- Dynamical Agent -->
+<div class="container mt-5" id="dynamical-agent">
+    <p class="section-title">Dynamical Agent</p>
+    <div style="padding-left:15px">
+
+        <p>
+            Conversely to the classical "<i>teleportation</i>" approach, the navigation agent is trained
+            <b>end-to-end</b> in simulation with a <b>dynamical model</b> of the behavior of the real robot.
+        </p>
+
+
+        <div class="jumbotron jumbotron-fluid p-3">
+            <div class="container text-center">
+                <p class="lead text-primary mb-0">
+                    The end-to-end agent interacts with a dynamical model for realistic motion.
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title">Dynamical model playground</h5>
+            <p class="card-subtitle">Observe the behavior of the dynamics for different parameters on the trajectory and
+                action space of the agent.
+            </p>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col m-0 p-0">
+                    <h4 class="text-center">Step response</h4>
+                    <div class="dynamic-tool" id="dyn-step-response"></div>
+                </div>
+                <div class="col m-0 p-0">
+                    <h4 class="text-center">Sample trajectory</h4>
+                    <div class="dynamic-tool" id="dyn-sample-traj"></div>
+                </div>
+                <div class="col m-0 p-0">
+                    <h4 class="text-center">Action space</h4>
+                    <div class="dynamic-tool" id="dyn-action-space"></div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col">
+                    <!-- Grid of sliders for damping factors -->
+                    <div class="main-slider-container">
+                        <div class="slider-info">
+                            <label>Damping</label>
+                        </div>
+                        <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
+                               id="damp-slider">
+                    </div>
+                    <div class="slider-grid">
+                        <div class="slider-block">
+                            <div class="slider-info">
+                                <label>Linear (Brk.): </label>
+                                <div id="damp-lin-brk-value">0.7</div>
+                            </div>
+                            <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
+                                   id="damp-lin-brk-slider">
+                        </div>
+                        <div class="slider-block">
+                            <div class="slider-info">
+                                <label>Angular (Brk.): </label>
+                                <div id="damp-ang-brk-value">0.7</div>
+                            </div>
+                            <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
+                                   id="damp-ang-brk-slider">
+                        </div>
+                        <div class="slider-block">
+                            <div class="slider-info">
+                                <label>Linear (Acc.)</label>
+                                <div id="damp-lin-acc-value">0.7</div>
+                            </div>
+                            <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
+                                   id="damp-lin-acc-slider">
+                        </div>
+                        <div class="slider-block">
+                            <div class="slider-info">
+                                <label>Angular (Acc.)</label>
+                                <div id="damp-ang-acc-value">0.7</div>
+                            </div>
+                            <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
+                                   id="damp-ang-acc-slider">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <!-- Grid of sliders for damping factors -->
+                    <div class="main-slider-container">
+                        <div class="slider-info">
+                            <label>Response time</label>
+                        </div>
+                        <input type="range" min="0" max="1" step="0.01" value="0.7" class="slider" id="time-slider">
+                    </div>
+                    <div class="slider-grid">
+                        <div class="slider-block">
+                            <div class="slider-info">
+                                <label>Linear (Brk.): </label>
+                                <div id="time-lin-brk-value">0.7</div>
+                                <span style="padding-left:1px">s</span>
+                            </div>
+                            <input type="range" min="0.0024" max="1.2" step="0.01" value="0.7" class="slider"
+                                   id="time-lin-brk-slider">
+                        </div>
+                        <div class="slider-block">
+                            <div class="slider-info">
+                                <label>Angular (Brk.): </label>
+                                <div id="time-ang-brk-value">0.7</div>
+                                <span style="padding-left:1px">s</span>
+                            </div>
+                            <input type="range" min="0.0028" max="1.4" step="0.01" value="0.7" class="slider"
+                                   id="time-ang-brk-slider">
+                        </div>
+                        <div class="slider-block">
+                            <div class="slider-info">
+                                <label>Linear (Acc.)</label>
+                                <div id="time-lin-acc-value">0.7</div>
+                                <span style="padding-left:1px">s</span>
+                            </div>
+                            <input type="range" min="0.0026" max="1.3" step="0.01" value="0.7" class="slider"
+                                   id="time-lin-acc-slider">
+                        </div>
+                        <div class="slider-block">
+                            <div class="slider-info">
+                                <label>Angular (Acc.)</label>
+                                <div id="time-ang-acc-value">0.7</div>
+                                <span style="padding-left:1px">s</span>
+                            </div>
+                            <input type="range" min="0.0027" max="1.35" step="0.01" value="0.7" class="slider"
+                                   id="time-ang-acc-slider">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col">
+                    <!-- Grid of sliders for damping factors -->
+                    <div class="main-slider-container">
+                        <div class="slider-info">
+                            <label>Maximum Velocity</label>
+                        </div>
+                    </div>
+                    <div class="slider-grid">
+                        <div class="slider-block">
+                            <div class="slider-info">
+                                <label>Linear: </label>
+                                <div id="lin-maxvel-value">0.996</div>
+                                <span style="padding-left:1px">m/s</span>
+                            </div>
+                            <input type="range" min="0.0996" max="3.486" step="0.01" value="0.996" class="slider"
+                                   id="lin-maxvel-slider">
+                        </div>
+                        <div class="slider-block">
+                            <div class="slider-info">
+                                <label>Angular: </label>
+                                <div id="ang-maxvel-value">2.914</div>
+                                <span style="padding-left:1px">rad/s</span>
+                            </div>
+                            <input type="range" min="0.2914" max="10.199" step="0.01" value="2.914" class="slider"
+                                   id="ang-maxvel-slider">
+                        </div>
+                    </div>
+
+                    <div class="slider-block">
+                        <!--                        reset button-->
+                        <button class="btn btn-primary" id="reset-button">Reset</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p>
+        <a class="btn btn-link" data-toggle="collapse" href="#detail-dynamics" role="button" aria-expanded="false"
+           aria-controls="details-dynamics" style="color: #9F9F9F">
+            Click here for more details
+            <i class="fas fa-angle-down rotate-icon"></i>
+        </a>
+    </p>
+    <div class="row">
+        <div class="col">
+            <div class="collapse multi-collapse" id="detail-dynamics">
+                <div class="card card-body">
+                    <p class="mb-0">
+                        We simulate the robot's behavior using a <b/>second order dynamical model</b>:
+                        \[
+                        \begin{array}{ll}
+
+                        \ddot v(t) &= \frac{1}{\tau} \big(v(t) - c_v(t)\big) + \frac{2\gamma}{\tau} \dot v(t) \\
+                        \ddot \omega(t) &= \frac{1}{\tau} \big(\omega(t) - c_\omega(t)\big) + \frac{2\gamma}{\tau} \dot
+                        \omega(t)
+                        \end{array}
+                        \]
+                        where
+                    </p>
+                    <ul class="list-group pl-4 mt-0">
+                        <li> \(v(t)\) and \(\omega(t)\) are the robot’s linear and angular velocities at time \(t\),
+                        </li>
+                        <li> \(\tau\) and \(\gamma\) represent the damping and response time of the model, and
+                        </li>
+                        <li> \(c_v(t)\) and \(c_\omega(t)\) are the commands for linear and angular velocities.
+                        </li>
+                    </ul>
+
+
+                    <p>
+                        These parameters are based on real data collected from the robot.
+                        Different damping and response time values are applied depending on the action type
+                        (<b>acceleration</b> or <b>braking</b>) and motion type (<b>linear</b> or <b>angular</b>).
+                    </p>
+
+                    <p class="mb-0 mt-1">
+                    <div class="badge badge-primary head">Step response</div>
+                    Step response shows how the dynamics react to a sudden command change:
+
+                    <ul class="list-group pl-4 mt-0">
+                        <li> First 5 seconds: target velocities are 0.7 m/s (linear) and 2.0 rad/s (angular).</li>
+                        <li> Next 5 seconds: target velocities are reset to 0.0 m/s and 0.0 rad/s.</li>
+                    </ul>
+                    </p>
+
+                    <p class="mb-0 mt-1">
+                    <div class="badge badge-primary head">Sample trajectory</div>
+                    The sample trajectory replays actions that drive the robot from a red dot to a green dot.
+                    Adjusting dynamics parameters will impact the trajectory. It highlights the long term effect
+                    of changes in the dynamical parameters.
+                    </p>
+
+                    <p class="mb-0 mt-1">
+                    <div class="badge badge-primary head">Action space</div>
+                    The action space consists of 28 discrete actions, each with a specific linear and angular
+                    velocity. For each action, we show the robot's displacement after 1 second, starting from
+                    position (0, 0) and an initial speed of 1.0 m/s.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br/>
+    <div class="jumbotron jumbotron-fluid p-3">
+        <div class="container text-center">
+            <p class="lead text-primary mb-0">
+                Simulated dynamics greatly improves navigation in real world.
+            </p>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title">Real world navigation</h5>
+            <p class="card-subtitle">With and without simulated dynamics during training. Trajectories from <b>real
+                experiments</b> replayed in simulatio
+                for easier visualization.
+            </p>
+        </div>
+        <div class="card-body">
+            <div class="btn-group btn-group-toggle w-100 justify-content-end" data-toggle="buttons"
+                 id="episode-selector">
+                <label class="btn btn-secondary active">
+                    <input type="radio" name="options" id="episode_01" autocomplete="off" checked> Episode 1
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="episode_02" autocomplete="off"> Episode 2
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="episode_03" autocomplete="off"> Episode 3
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="episode_04" autocomplete="off"> Episode 4
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="episode_05" autocomplete="off"> Episode 5
+                </label>
+            </div>
+            <div class="w-100">
+                <video controls autoplay muted src="assets/episodes/episode_01.mp4" class="w-100" id="ep-video"></video>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="table-hover table table-responsive mt-5">
+        <table class="table text-center">
+            <thead class="thead-light">
+            <tr style="background-color: #d3d3d3;">
+                <th scope="col" rowspan="2"><strong>Method &amp; action space</strong></th>
+                <th scope="col" rowspan="2" style=" border-right: 1px solid gray"><strong>+dyn (train)</strong></th>
+                <th colspan="3" style="background-color: #ffcc80; border-right: 1px solid gray"><strong>Sim (+dyn.)
+                    HM3D/2.5k</strong></th>
+                <th colspan="3" style="background-color: #ffcc80; border-right: 1px solid gray"><strong>Sim (+dyn.)
+                    office</strong></th>
+                <th colspan="3" style="background-color: #c8e6c9;"><strong>Real office</strong></th>
+            </tr>
+            <tr style="background-color: #d3d3d3;">
+                <th style="background-color: #ffcc80;"><strong>SR</strong></th>
+                <th style="background-color: #ffcc80;"><strong>SPL</strong></th>
+                <th style="background-color: #ffcc80; border-right: 1px solid gray"><strong>SCT</strong></th>
+                <th style="background-color: #ffcc80;"><strong>SR</strong></th>
+                <th style="background-color: #ffcc80;"><strong>SPL</strong></th>
+                <th style="background-color: #ffcc80; border-right: 1px solid gray"><strong>SCT</strong></th>
+                <th style="background-color: #c8e6c9;"><strong>SR</strong></th>
+                <th style="background-color: #c8e6c9;"><strong>SPL</strong></th>
+                <th style="background-color: #c8e6c9;"><strong>SCT</strong></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><strong>Position, disc(4)</strong></td>
+                <td style=" border-right: 1px solid gray">No</td>
+                <td>29.1%</td>
+                <td>18.1%</td>
+                <td style=" border-right: 1px solid gray">2.0%</td>
+                <td>10.0%</td>
+                <td>7.3%</td>
+                <td style=" border-right: 1px solid gray">0.9%</td>
+                <td>0.0%</td>
+                <td>0.0%</td>
+                <td>0.0%</td>
+            </tr>
+            <tr>
+                <td><strong>Velocity, disc(28)</strong></td>
+                <td style=" border-right: 1px solid gray">No</td>
+                <td>27.6%</td>
+                <td>11.6%</td>
+                <td style=" border-right: 1px solid gray">5.0%</td>
+                <td>25.0%</td>
+                <td>11.1%</td>
+                <td style=" border-right: 1px solid gray">5.8%</td>
+                <td>10.0%</td>
+                <td>5.3%</td>
+                <td>1.7%</td>
+            </tr>
+            <tr>
+                <td><strong>Velocity, disc(28)</strong></td>
+                <td style=" border-right: 1px solid gray">Yes</td>
+                <td><strong>97.6%</strong></td>
+                <td><strong>82.3%</strong></td>
+                <td style=" border-right: 1px solid gray"><strong>52.5%</strong></td>
+                <td><strong>100.0%</strong></td>
+                <td><strong>82.1%</strong></td>
+                <td style=" border-right: 1px solid gray"><strong>64.5%</strong></td>
+                <td><strong>95.0%</strong></td>
+                <td><strong>55.7%</strong></td>
+                <td><strong>18.9%</strong></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="container mt-5" id="prediction-or-correction">
+    <p class="section-title">Prediction vs. Correction</p>
+
+    <p>
+        To navigate effectively, an agent can either rely solely on sensory inputs or use a learned dynamics model,
+        integrating each step with feedback from prior actions. It’s believed that trained navigation agents combine
+        both approaches through a prediction-correction process similar to a Kalman filter, where predictions from a
+        dynamics model are adjusted with sensory feedback.
+    </p>
+
+    <div class="jumbotron jumbotron-fluid p-3">
+        <div class="container text-center">
+            <p class="lead text-primary mb-0">
+                Dynamics agent uses a prediction-correction scheme to estimate its current pose.
+            </p>
+        </div>
+    </div>
+
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title">Prediction vs. Correction</h5>
+            <p class="card-subtitle">
+                We measure the robustness of the agent against variation in dynamics/odometry parameters. Its
+                sensitivity
+                informs us about the agent's reliance on prediction and correction.
+            </p>
+        </div>
+        <div class="card-body">
+            <div class="btn-group btn-group-toggle w-100 justify-content-end" data-toggle="buttons"
+                 id="metric-selector">
+                <label class="btn btn-secondary active">
+                    <input type="radio" name="options" id="Success" autocomplete="off" checked> Success
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="SPL" autocomplete="off"> SPL
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="SCT" autocomplete="off"> SCT
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="Soft SPL" autocomplete="off"> Soft SPL
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="Distance to Goal" autocomplete="off"> Distance to Goal
+                </label>
+            </div>
+            <div id="prediction-correction" style="width:100%; height: 300px"></div>
+        </div>
+    </div>
+    <p>
+        <a class="btn btn-link" data-toggle="collapse" href="#detail-kalman" role="button" aria-expanded="false"
+           aria-controls="details-kalman" style="color: #9F9F9F">
+            Click here for more details
+            <i class="fas fa-angle-down rotate-icon"></i>
+        </a>
+    </p>
+    <div class="row">
+        <div class="col">
+            <div class="collapse multi-collapse" id="detail-kalman">
+                <div class="card card-body">
+                    <p>
+                        To assess the trained policy's sensitivity to changes in inputs and dynamics, we test it in
+                        corrupted environments and measure the performance drop. We disturb the dynamics by altering
+                        the damping factor, response time, or max velocity, and corrupt inputs by adding noise to
+                        odometry sensors.
+                    </p>
+                    <p>
+                        Since environment parameters vary in scale and meaning, we use a <i>distance to belief</i>
+                        metric to unify their effects on agent performance. This metric measures the average spatial
+                        difference between agent positions in the corrupted and training environments over 1,000
+                        five-second action sequences.
+                    </p>
+
+                    <p class="mb-0 mt-1">
+                    <div class="badge badge-primary head">How to use</div>
+                    <p>
+                        The X axis represents the <b>distance to
+                        belief</b>
+                        as introduced above, and the Y axis corresponds to the selected metric. You can change the
+                        metric by clicking on the buttons above the plot.
+                    </p>
+                    <p>
+                        On <b>mouse hover</b>, the graph open a <i>tooltip</i> showing a sampled trajectory generated
+                        with
+                        in-domain parameters (in black) and corrupted ones (in red).
+                    </p>
+
+                    <p class="text-primary text-center">
+                        Keep in mind that the red path is theoretical. In practice, the agent reacts its out-of-domain
+                        observations and can correct its trajectory.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container mt-5" id="occupancy-map">
+    <p class="section-title">Occupancy map</p>
+
+    <p>
+        TODO
+    </p>
+
+    <div class="jumbotron jumbotron-fluid p-3">
+        <div class="container text-center">
+            <p class="lead text-primary mb-0">
+                The internal memory of the end-to-end agent stores the local occupancy map
+                of the environment.
+            </p>
+        </div>
+    </div>
+
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title">Occupancy map</h5>
+            <p class="card-subtitle">
+                TODO
+            </p>
+        </div>
+        <div class="card-body" id="occupancy-map-container">
+            <div class="row">
+                <div class="col">
+                    <h5> Probing in simulation </h5>
+                    <div style="position: relative; width: 100%">
+                        <div class="progress" id="sim-progress-container">
+                            <div id="sim-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated"
+                                 role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                        </div>
+
+                        <img id="sim-map-image" src="assets/map.png"
+                             style="position: absolute; top: 0; left: 0; z-index: 1;width: 100%;display: none">
+                        <img id="sim-occ-image"
+                             style="position: relative; z-index: 2;opacity:0.75">
+                    </div>
+                    <div class="mt-4 text-center">
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="button" aria-pressed="false"
+                                id="sim-play-button">
+                            Play
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="button" aria-pressed="false"
+                                id="sim-accumulate-button">
+                            Accumulate probings
+                        </button>
+
+                    </div>
+                </div>
+                <div class="col">
+                    <h5> Probing in real </h5>
+
+                    <div style="position: relative; width: 100%">
+                        <div class="progress" id="real-progress-container">
+                            <div id="real-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated"
+                                 role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
+                                 style="width: 75%"></div>
+                        </div>
+
+                        <img id="real-map-image" src="assets/map.png"
+                             style="position: absolute; top: 0; left: 0; z-index: 1;width: 100%;display: none">
+                        <img id="real-occ-image"
+                             style="position: relative; z-index: 2;opacity:0.75">
+                    </div>
+                    <div class="mt-4 text-center">
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="button" aria-pressed="false"
+                                id="real-play-button">
+                            Play
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="button" aria-pressed="false"
+                                id="real-accumulate-button">
+                            Accumulate probings
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <p>
+        <a class="btn btn-link" data-toggle="collapse" href="#detail-occupancy" role="button" aria-expanded="false"
+           aria-controls="details-occupancy" style="color: #9F9F9F">
+            Click here for more details
+            <i class="fas fa-angle-down rotate-icon"></i>
+        </a>
+    </p>
+    <div class="row">
+        <div class="col">
+            <div class="collapse multi-collapse" id="detail-occupancy">
+                <div class="card card-body">
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container mt-5" id="cost-map">
+    <p class="section-title">Action rating in real navigation</p>
+
+    <p>
+        TODO
+    </p>
+
+    <div class="jumbotron jumbotron-fluid p-3">
+        <div class="container text-center">
+            <p class="lead text-primary mb-0">
+                The internal memory of the end-to-end agent stores the local occupancy map
+                of the environment.
+            </p>
+        </div>
+    </div>
+
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title">Cost heatmaps</h5>
+            <p class="card-subtitle">
+                Action score for <b>3 different runs</b> of each episode. <span style="color:blue">blue</span> areas
+                indicates good actions, while <span style="color:red">red</span> areas indicates bad actions, and
+                <span style="color:green">green</span> areas indicates high superposition of good and bad actions.
+            </p>
+        </div>
+        <div class="card-body" id="cost-map-container">
+            <div class="row w-100">
+                <div class="form-group col">
+                    <label for="episodeSelect"><i>Select Episode:</i></label>
+                    <select class="form-control" id="episodeSelect"></select>
+                </div>
+                <div class="col">
+                    <!--                    Slider to control sigma-->
+                    <div class="main-slider-container">
+                        <div class="slider-info">
+                            <label for="sigma-slider">Sigma</label><span id="sigmaValue">5.0</span>
+                        </div>
+                        <input type="range" min="0.01" max="20.0" step="0.01" value=10.0 class="slider"
+                               id="sigma-slider">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <!--                    Slider to control sigma-->
+                    <div class="main-slider-container">
+                        <div class="slider-info">
+                            <label>Bad Action weight</label><span id="posThreshValue">10</span>
+                        </div>
+                        <input type="range" min="0.01" max="2.0" step="0.01" value="1.0" class="slider"
+                               id="pos-thresh-slider">
+                        <div class="d-flex justify-content-between" style="font-size: 0.75rem;color:#9B9B9B">
+                            <div><span class="fa-solid fa-arrow-left"></span> <span>More visible</span></div>
+                            <div><span>Less visible</span><span class="fa-solid fa-arrow-right"></span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="main-slider-container">
+                        <div class="slider-info">
+                            <label>Good action weight</label><span id="negThreshValue">10</span>
+                        </div>
+                        <input type="range" min="0.01" max="2.0" step="0.01" value="1.0" class="slider"
+                               id="neg-thresh-slider">
+                        <div class="d-flex justify-content-between" style="font-size: 0.75rem;color:#9B9B9B">
+                            <div><span class="fa-solid fa-arrow-left"></span> <span>More visible</span></div>
+                            <div><span>Less visible</span><span class="fa-solid fa-arrow-right"></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col text-center"><h4>Sample 1</h4></div>
+                <div class="col text-center"><h4>Sample 3</h4></div>
+                <div class="col text-center"><h4>Sample 2</h4></div>
+            </div>
+            <div class="row w-100" style="height: 300px" id="costmap-plot"></div>
+            <div class="d-flex justify-content-center flex-wrap mt-2" style="font-size: 0.75rem">
+                <div style="padding-right:10px"><span
+                        style="background-color:red;padding-left:25px;margin-right:5px"> </span><span>Bad actions</span>
+                </div>
+                <div style="padding-right:10px"><span
+                        style="background-color:blue;padding-left:25px;margin-right:5px"> </span><span>Good actions</span>
+                </div>
+                <div style="padding-right:10px"><span
+                        style="background-color:green;padding-left:25px;margin-right:5px"> </span><span>Superposition</span>
+                </div>
+                <div style="padding-right:10px"><span class="fa-solid fa-circle"
+                                                      style="color:red"></span><span> Goal</span></div>
+                <div style="padding-right:10px"><span class="fa-solid fa-circle"
+                                                      style="color:green"></span><span> Start</span></div>
+            </div>
+        </div>
+    </div>
+    <p>
+        <a class="btn btn-link" data-toggle="collapse" href="#detail-cost-maps" role="button" aria-expanded="false"
+           aria-controls="details-occupancy" style="color: #9F9F9F">
+            Click here for more details
+            <i class="fas fa-angle-down rotate-icon"></i>
+        </a>
+    </p>
+    <div class="row">
+        <div class="col">
+            <div class="collapse multi-collapse" id="detail-cost-maps">
+                <div class="card card-body">
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="js/dynamic_simulator.js"></script>
+<script src="js/prediction_vs_correction.js"></script>
+<script src="js/costmaps.js" type="module"></script>
+<script src="js/video_player.js"></script>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
