@@ -59,6 +59,7 @@
                         <li><a class="dropdown-item" href="#prediction-or-correction">Prediction vs. Correction</a></li>
                         <li><a class="dropdown-item" href="#occupancy-map">Occupancy maps</a></li>
                         <li><a class="dropdown-item" href="#cost-map">Cost heatmaps</a></li>
+                        <li><a class="dropdown-item" href="#shapley-value">Shapley values</a></li>
                     </ul>
                 </li>
                 <li class="nav-item"><a class="nav-link text-white" href="#">Cite</a></li>
@@ -91,17 +92,18 @@
 <div class="container mt-5" id="abstract">
     <p class="section-title">Abstract</p>
     <p style="padding-left:15px">
-        Progress in embodied AI has led to end-to-end trained agents navigating in real photo-realistic environments
-        capable of high-level reasoning and zero-shot or language conditioned behavior, with evaluations and benchmarks
-        dominated by simulation. In this work, we focus on the behavior of fast-moving real robots and fine-grained
-        behavior and present a large-scale experimental study involving 142 navigation episodes in a real environment
-        and done with a real physical robot, analyzing the type of reasoning emerging from end-to-end training. In
-        particular, we study the presence of realistic dynamics learned by the agent and used for open-loop forecasting,
-        and its interplay with sensing. We analyze the way the agent uses latent memory and show that it holds elements
-        of the scene structure and exploration information. We probe the agent's planning capabilities, and while we did
-        not find evidence in precise motion plans in the agent's memory, in post-hoc analysis we show that its learned
-        value function is linked to long-term plans. Put together, the experiments paint a new picture on how using
-        tools from computer vision and sequential decision taking have led to new capabilities in robotics and control.
+        Progress in Embodied AI has made it possible for end-to-end-trained agents to navigate in photo-realistic
+        environments with high-level reasoning and zero-shot or language-conditioned behavior, but evaluations and
+        benchmarks are still dominated by simulation. In this work, we focus on the fine-grained behavior of fast-moving
+        real robots and present a large-scale experimental study involving 262 navigation episodes in a real
+        environment with a physical robot, where we analyze the type of reasoning emerging from end-to-end training. In
+        particular, we study the presence of realistic dynamics which the agent learned for open-loop forecasting, and
+        their interplay with sensing. We analyze the way the agent uses latent memory to hold elements of the scene
+        structure and information gathered during exploration. We probe the planning capabilities of the agent, and find
+        in its memory evidence for somewhat precise plans over a limited horizon. Furthermore, we show in a post-hoc
+        analysis that the value function learned by the agent relates to long-term planning. Put together, our
+        experiments paint a new picture on how using tools from computer vision and sequential decision making have led
+        to new capabilities in robotics and control.
     </p>
 
 </div>
@@ -109,20 +111,15 @@
 <!-- Dynamical Agent -->
 <div class="container mt-5" id="dynamical-agent">
     <p class="section-title">Dynamical Agent</p>
-    <div style="padding-left:15px">
+    <div class="pt-2">
 
         <p>
             Conversely to the classical "<i>teleportation</i>" approach, the navigation agent is trained
             <b>end-to-end</b> in simulation with a <b>dynamical model</b> of the behavior of the real robot.
         </p>
 
-
-        <div class="jumbotron jumbotron-fluid p-3">
-            <div class="container text-center">
-                <p class="lead text-primary mb-0">
-                    The end-to-end agent interacts with a dynamical model for realistic motion.
-                </p>
-            </div>
+        <div class="highlight">
+            The end-to-end agent interacts with a dynamical model for realistic motion.
         </div>
     </div>
 
@@ -155,7 +152,7 @@
                     <!-- Grid of sliders for damping factors -->
                     <div class="main-slider-container">
                         <div class="slider-info">
-                            <label>Damping</label>
+                            <label for="damp-slider">Damping</label>
                         </div>
                         <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
                                id="damp-slider">
@@ -163,7 +160,7 @@
                     <div class="slider-grid">
                         <div class="slider-block">
                             <div class="slider-info">
-                                <label>Linear (Brk.): </label>
+                                <label for="damp-lin-brk-slider">Linear (Brk.): </label>
                                 <div id="damp-lin-brk-value">0.7</div>
                             </div>
                             <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
@@ -171,7 +168,7 @@
                         </div>
                         <div class="slider-block">
                             <div class="slider-info">
-                                <label>Angular (Brk.): </label>
+                                <label for="damp-ang-brk-slider">Angular (Brk.): </label>
                                 <div id="damp-ang-brk-value">0.7</div>
                             </div>
                             <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
@@ -179,7 +176,7 @@
                         </div>
                         <div class="slider-block">
                             <div class="slider-info">
-                                <label>Linear (Acc.)</label>
+                                <label for="damp-lin-acc-slider">Linear (Acc.)</label>
                                 <div id="damp-lin-acc-value">0.7</div>
                             </div>
                             <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
@@ -187,7 +184,7 @@
                         </div>
                         <div class="slider-block">
                             <div class="slider-info">
-                                <label>Angular (Acc.)</label>
+                                <label for="damp-ang-acc-slider">Angular (Acc.)</label>
                                 <div id="damp-ang-acc-value">0.7</div>
                             </div>
                             <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
@@ -200,14 +197,14 @@
                     <!-- Grid of sliders for damping factors -->
                     <div class="main-slider-container">
                         <div class="slider-info">
-                            <label>Response time</label>
+                            <label for="time-slider">Response time</label>
                         </div>
                         <input type="range" min="0" max="1" step="0.01" value="0.7" class="slider" id="time-slider">
                     </div>
                     <div class="slider-grid">
                         <div class="slider-block">
                             <div class="slider-info">
-                                <label>Linear (Brk.): </label>
+                                <label for="time-lin-brk-slider">Linear (Brk.): </label>
                                 <div id="time-lin-brk-value">0.7</div>
                                 <span style="padding-left:1px">s</span>
                             </div>
@@ -216,7 +213,7 @@
                         </div>
                         <div class="slider-block">
                             <div class="slider-info">
-                                <label>Angular (Brk.): </label>
+                                <label for="time-ang-brk-slider">Angular (Brk.): </label>
                                 <div id="time-ang-brk-value">0.7</div>
                                 <span style="padding-left:1px">s</span>
                             </div>
@@ -225,7 +222,7 @@
                         </div>
                         <div class="slider-block">
                             <div class="slider-info">
-                                <label>Linear (Acc.)</label>
+                                <label for="time-lin-acc-slider">Linear (Acc.)</label>
                                 <div id="time-lin-acc-value">0.7</div>
                                 <span style="padding-left:1px">s</span>
                             </div>
@@ -234,7 +231,7 @@
                         </div>
                         <div class="slider-block">
                             <div class="slider-info">
-                                <label>Angular (Acc.)</label>
+                                <label for="time-ang-acc-slider">Angular (Acc.)</label>
                                 <div id="time-ang-acc-value">0.7</div>
                                 <span style="padding-left:1px">s</span>
                             </div>
@@ -255,7 +252,7 @@
                     <div class="slider-grid">
                         <div class="slider-block">
                             <div class="slider-info">
-                                <label>Linear: </label>
+                                <label for="lin-maxvel-slider">Linear: </label>
                                 <div id="lin-maxvel-value">0.996</div>
                                 <span style="padding-left:1px">m/s</span>
                             </div>
@@ -264,7 +261,7 @@
                         </div>
                         <div class="slider-block">
                             <div class="slider-info">
-                                <label>Angular: </label>
+                                <label for="ang-maxvel-slider">Angular: </label>
                                 <div id="ang-maxvel-value">2.914</div>
                                 <span style="padding-left:1px">rad/s</span>
                             </div>
@@ -284,7 +281,7 @@
 
     <p>
         <a class="btn btn-link" data-toggle="collapse" href="#detail-dynamics" role="button" aria-expanded="false"
-           aria-controls="details-dynamics" style="color: #9F9F9F">
+           aria-controls="details-dynamics">
             Click here for more details
             <i class="fas fa-angle-down rotate-icon"></i>
         </a>
@@ -294,7 +291,7 @@
             <div class="collapse multi-collapse" id="detail-dynamics">
                 <div class="card card-body">
                     <p class="mb-0">
-                        We simulate the robot's behavior using a <b/>second order dynamical model</b>:
+                        We simulate the robot's behavior using a <b>second order dynamical model</b>:
                         \[
                         \begin{array}{ll}
 
@@ -305,7 +302,7 @@
                         \]
                         where
                     </p>
-                    <ul class="list-group pl-4 mt-0">
+                    <ul class="list-group mt-0" style="margin-left: 30px">
                         <li> \(v(t)\) and \(\omega(t)\) are the robot’s linear and angular velocities at time \(t\),
                         </li>
                         <li> \(\tau\) and \(\gamma\) represent the damping and response time of the model, and
@@ -314,57 +311,97 @@
                         </li>
                     </ul>
 
-
-                    <p>
+                    <p class="mt-1">
                         These parameters are based on real data collected from the robot.
                         Different damping and response time values are applied depending on the action type
                         (<b>acceleration</b> or <b>braking</b>) and motion type (<b>linear</b> or <b>angular</b>).
                     </p>
 
-                    <p class="mb-0 mt-1">
-                    <div class="badge badge-primary head">Step response</div>
-                    Step response shows how the dynamics react to a sudden command change:
+                    <div class="row w-100">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-header text-white bg-primary">
+                                    <h5 class="card-title">Step response</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="card-text">
+                                        Step response shows how the dynamics react to a sudden command change:
 
-                    <ul class="list-group pl-4 mt-0">
-                        <li> First 5 seconds: target velocities are 0.7 m/s (linear) and 2.0 rad/s (angular).</li>
-                        <li> Next 5 seconds: target velocities are reset to 0.0 m/s and 0.0 rad/s.</li>
-                    </ul>
-                    </p>
-
-                    <p class="mb-0 mt-1">
-                    <div class="badge badge-primary head">Sample trajectory</div>
-                    The sample trajectory replays actions that drive the robot from a red dot to a green dot.
-                    Adjusting dynamics parameters will impact the trajectory. It highlights the long term effect
-                    of changes in the dynamical parameters.
-                    </p>
-
-                    <p class="mb-0 mt-1">
-                    <div class="badge badge-primary head">Action space</div>
-                    The action space consists of 28 discrete actions, each with a specific linear and angular
-                    velocity. For each action, we show the robot's displacement after 1 second, starting from
-                    position (0, 0) and an initial speed of 1.0 m/s.
-                    </p>
+                                        <ul class="list-group pl-4 mt-0">
+                                            <li> First 5 seconds: target velocities are 0.7 m/s (linear) and 2.0 rad/s
+                                                (angular).
+                                            </li>
+                                            <li> Next 5 seconds: target velocities are reset to 0.0 m/s and 0.0 rad/s.
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-header text-white bg-primary">
+                                    <h5 class="card-title">Sample trajectory</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text"> The sample trajectory replays actions that drive the robot
+                                        from a red dot to a green dot.
+                                        Adjusting dynamics parameters will impact the trajectory. It highlights the long
+                                        term effect
+                                        of changes in the dynamical parameters.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-header text-white bg-primary">
+                                    <h5 class="card-title">Action space</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text"> The action space consists of 28 discrete actions, each with a
+                                        specific linear and angular
+                                        velocity. For each action, we show the robot's displacement after 1 second,
+                                        starting from
+                                        position (0, 0) and an initial speed of 1.0 m/s.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <br/>
-    <div class="jumbotron jumbotron-fluid p-3">
-        <div class="container text-center">
-            <p class="lead text-primary mb-0">
-                Simulated dynamics greatly improves navigation in real world.
-            </p>
-        </div>
+    <p class="mt-3">
+        We reproduce the work from <a
+            href="https://openaccess.thecvf.com/content/CVPR2024/html/Bono_Learning_to_Navigate_Efficiently_and_Precisely_in_Real_Environments_CVPR_2024_paper.html">Bono
+        et al.</a>
+        and substantially improved their performance through <b>longer training time</b>, <b>better angle
+        representation</b> and <b>data augmentation</b>.
+    </p>
+    <div class="highlight">
+        Simulated dynamics greatly improves navigation in real world.
     </div>
 
     <div class="card mt-4">
         <div class="card-header">
-            <h5 class="card-title">Real world navigation</h5>
-            <p class="card-subtitle">With and without simulated dynamics during training. Trajectories from <b>real
-                experiments</b> replayed in simulatio
-                for easier visualization.
+            <h5 class="card-title">Compare agents for <b>Real world</b> navigation</h5>
+            <p class="card-subtitle">
+                Real experiments <b>replayed</b> in simulation.
             </p>
+            <div>
+                <div class="d-flex justify-content-between mt-3">
+                    <div>
+                        <span id="green_robot"></span> D28 with dynamics
+                    </div>
+                    <div>
+                        <span id="blue_robot"></span> D28 instantaneous (no dynamics)
+                    </div>
+                    <div>
+                        <span id="red_robot"></span> D4 (no dynamics)
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="card-body">
             <div class="btn-group btn-group-toggle w-100 justify-content-end" data-toggle="buttons"
@@ -418,7 +455,7 @@
             </thead>
             <tbody>
             <tr>
-                <td><strong>Position, disc(4)</strong></td>
+                <td><strong>D4</strong></td>
                 <td style=" border-right: 1px solid gray">No</td>
                 <td>29.1%</td>
                 <td>18.1%</td>
@@ -431,7 +468,7 @@
                 <td>0.0%</td>
             </tr>
             <tr>
-                <td><strong>Velocity, disc(28)</strong></td>
+                <td><strong>D28-instant</strong></td>
                 <td style=" border-right: 1px solid gray">No</td>
                 <td>27.6%</td>
                 <td>11.6%</td>
@@ -444,7 +481,7 @@
                 <td>1.7%</td>
             </tr>
             <tr>
-                <td><strong>Velocity, disc(28)</strong></td>
+                <td><strong>D28-dynamics</strong></td>
                 <td style=" border-right: 1px solid gray">Yes</td>
                 <td><strong>97.6%</strong></td>
                 <td><strong>82.3%</strong></td>
@@ -452,9 +489,9 @@
                 <td><strong>100.0%</strong></td>
                 <td><strong>82.1%</strong></td>
                 <td style=" border-right: 1px solid gray"><strong>64.5%</strong></td>
-                <td><strong>95.0%</strong></td>
-                <td><strong>55.7%</strong></td>
-                <td><strong>18.9%</strong></td>
+                <td><strong>92.5%</strong></td>
+                <td><strong>61.1%</strong></td>
+                <td><strong>22.4%</strong></td>
             </tr>
             </tbody>
         </table>
@@ -472,12 +509,8 @@
         dynamics model are adjusted with sensory feedback.
     </p>
 
-    <div class="jumbotron jumbotron-fluid p-3">
-        <div class="container text-center">
-            <p class="lead text-primary mb-0">
-                Dynamics agent uses a prediction-correction scheme to estimate its current pose.
-            </p>
-        </div>
+    <div class="highlight">
+        Dynamics agent uses a prediction-correction scheme to estimate its current pose.
     </div>
 
 
@@ -514,7 +547,7 @@
     </div>
     <p>
         <a class="btn btn-link" data-toggle="collapse" href="#detail-kalman" role="button" aria-expanded="false"
-           aria-controls="details-kalman" style="color: #9F9F9F">
+           aria-controls="details-kalman">
             Click here for more details
             <i class="fas fa-angle-down rotate-icon"></i>
         </a>
@@ -524,37 +557,40 @@
             <div class="collapse multi-collapse" id="detail-kalman">
                 <div class="card card-body">
                     <p>
-                        To assess the trained policy's sensitivity to changes in inputs and dynamics, we test it in
-                        corrupted environments and measure the performance drop. We disturb the dynamics by altering
-                        the damping factor, response time, or max velocity, and corrupt inputs by adding noise to
-                        odometry sensors.
+                        This plot reproduce figure 2 from the paper. Our goal is to measure how much the agent
+                        relies on <b>prediction</b> VS. <b>correction</b> to estimate its current pose, akin to
+                        a Kalman filter. To do so, we evaluate the agent's performance in different environments
+                        with <b>corrupted dynamics / observations</b>
                     </p>
+                    <img src="assets/metric.svg" class="img-fluid" alt="Kalman filter"/>
                     <p>
-                        Since environment parameters vary in scale and meaning, we use a <i>distance to belief</i>
+                        Since environment parameters vary in scale and meaning, we use a <b>distance to belief</b>
                         metric to unify their effects on agent performance. This metric measures the average spatial
                         difference between agent positions in the corrupted and training environments over 1,000
                         five-second action sequences.
                     </p>
 
-                    <p class="mb-0 mt-1">
-                    <div class="badge badge-primary head">How to use</div>
-                    <p>
-                        The X axis represents the <b>distance to
-                        belief</b>
-                        as introduced above, and the Y axis corresponds to the selected metric. You can change the
-                        metric by clicking on the buttons above the plot.
-                    </p>
-                    <p>
-                        On <b>mouse hover</b>, the graph open a <i>tooltip</i> showing a sampled trajectory generated
-                        with
-                        in-domain parameters (in black) and corrupted ones (in red).
-                    </p>
-
-                    <p class="text-primary text-center">
-                        Keep in mind that the red path is theoretical. In practice, the agent reacts its out-of-domain
-                        observations and can correct its trajectory.
-                    </p>
-
+                    <div class="card">
+                        <div class="card-header text-white bg-primary">
+                            <h5 class="card-title">How to use</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="card-text list-group list-group-flush">
+                                <li class="list-group-item"><b>Change the metric</b> used on the Y axis by clicking on
+                                    the button above,
+                                </li>
+                                <li class="list-group-item"><b>Hover</b> a point for more details,</li>
+                                <li class="list-group-item"><b>A tooltip appears</b> showing 4 examples of distance to
+                                    belief,
+                                </li>
+                                <li class="list-group-item">The dotted line corresponds to the <b>corrupted dynamics</b>,
+                                </li>
+                                <li class="list-group-item">The <i>distance to belief</i> is proportional to the area
+                                    between the paths.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -566,39 +602,34 @@
     <p class="section-title">Occupancy map</p>
 
     <p>
-        TODO
+        We probed the existence of <b>local occupancy map</b> in a square area of 3x3 meters around the agent.
     </p>
 
-    <div class="jumbotron jumbotron-fluid p-3">
-        <div class="container text-center">
-            <p class="lead text-primary mb-0">
-                The internal memory of the end-to-end agent stores the local occupancy map
-                of the environment.
-            </p>
-        </div>
+    <div class="highlight">
+        The internal state contains the local occupancy map of the environment.
     </div>
-
 
     <div class="card mt-4">
         <div class="card-header">
             <h5 class="card-title">Occupancy map</h5>
             <p class="card-subtitle">
-                TODO
+                Reprojected local occupancy map in our test environment, for both simulation and real navigation
+                episodes.
             </p>
         </div>
         <div class="card-body" id="occupancy-map-container">
             <div class="row">
                 <div class="col">
-                    <h5> Probing in simulation </h5>
+                    <h3 class="text-center"> Probing in simulation </h3>
                     <div style="position: relative; width: 100%">
                         <div class="progress" id="sim-progress-container">
                             <div id="sim-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated"
-                                 role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                                 role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0"></div>
                         </div>
 
-                        <img id="sim-map-image" src="assets/map.png"
+                        <img id="sim-map-image" src="assets/map.png" alt="map"
                              style="position: absolute; top: 0; left: 0; z-index: 1;width: 100%;display: none">
-                        <img id="sim-occ-image"
+                        <img id="sim-occ-image" alt="occupancy" src=""
                              style="position: relative; z-index: 2;opacity:0.75">
                     </div>
                     <div class="mt-4 text-center">
@@ -614,7 +645,7 @@
                     </div>
                 </div>
                 <div class="col">
-                    <h5> Probing in real </h5>
+                    <h3 class="text-center"> Probing in real </h3>
 
                     <div style="position: relative; width: 100%">
                         <div class="progress" id="real-progress-container">
@@ -623,9 +654,9 @@
                                  style="width: 75%"></div>
                         </div>
 
-                        <img id="real-map-image" src="assets/map.png"
+                        <img id="real-map-image" src="assets/map.png" alt="map"
                              style="position: absolute; top: 0; left: 0; z-index: 1;width: 100%;display: none">
-                        <img id="real-occ-image"
+                        <img id="real-occ-image" alt="occupancy" src=""
                              style="position: relative; z-index: 2;opacity:0.75">
                     </div>
                     <div class="mt-4 text-center">
@@ -646,7 +677,7 @@
     </div>
     <p>
         <a class="btn btn-link" data-toggle="collapse" href="#detail-occupancy" role="button" aria-expanded="false"
-           aria-controls="details-occupancy" style="color: #9F9F9F">
+           aria-controls="details-occupancy">
             Click here for more details
             <i class="fas fa-angle-down rotate-icon"></i>
         </a>
@@ -655,8 +686,36 @@
         <div class="col">
             <div class="collapse multi-collapse" id="detail-occupancy">
                 <div class="card card-body">
+                    <p>
+                        We trained a convolution-deconvolution network to predict occupancy map from the frozen
+                        internal state of the agent using privileged information from the simulator. Then, we collected
+                        the internal state of the agent during <b>real navigation episode</b> in our building at 1Hz.
+                    </p>
 
+                    <p>
+                        To ease vizualization, we transformed the local frame of the agent to a global frame and plotted
+                        the probed occupancy on top of the map of the building.
+                    </p>
 
+                    <div class="card">
+                        <div class="card-header text-white bg-primary">
+                            <h5 class="card-title">How to use</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="card-text list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <b>Left side</b>: Probing in simulation, <b>Right side</b>: Probing in real
+                                </li>
+                                <li class="list-group-item">Click on the <b>Play</b> button to see the probed occupancy
+                                    map
+                                </li>
+                                <li class="list-group-item">To accumulate the map over time, click on the <b>Accumulate
+                                    probings</b> button
+                                </li>
+                                <li class="list-group-item"> Click again to stop the accumulation</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -668,16 +727,16 @@
     <p class="section-title">Action rating in real navigation</p>
 
     <p>
-        TODO
+        We used an expert to rate the actions of the agent in real navigation episodes based on Fast Marching
+        Method.
+        By observing how the scores changes from one step to another, we can identify difficult part of the path.
+        Moreover,
+        we can aggregate this information spatially and discover challenging areas within the environment.
+
     </p>
 
-    <div class="jumbotron jumbotron-fluid p-3">
-        <div class="container text-center">
-            <p class="lead text-primary mb-0">
-                The internal memory of the end-to-end agent stores the local occupancy map
-                of the environment.
-            </p>
-        </div>
+    <div class="highlight">
+        Real robot navigates well, but struggles on narrow paths and dead ends.
     </div>
 
 
@@ -712,7 +771,7 @@
                     <!--                    Slider to control sigma-->
                     <div class="main-slider-container">
                         <div class="slider-info">
-                            <label>Bad Action weight</label><span id="posThreshValue">10</span>
+                            <label for="pos-thresh-slider">Bad Action weight</label><span id="posThreshValue">10</span>
                         </div>
                         <input type="range" min="0.01" max="2.0" step="0.01" value="1.0" class="slider"
                                id="pos-thresh-slider">
@@ -725,7 +784,7 @@
                 <div class="col">
                     <div class="main-slider-container">
                         <div class="slider-info">
-                            <label>Good action weight</label><span id="negThreshValue">10</span>
+                            <label for="neg-thresh-slider">Good action weight</label><span id="negThreshValue">10</span>
                         </div>
                         <input type="range" min="0.01" max="2.0" step="0.01" value="1.0" class="slider"
                                id="neg-thresh-slider">
@@ -761,7 +820,7 @@
     </div>
     <p>
         <a class="btn btn-link" data-toggle="collapse" href="#detail-cost-maps" role="button" aria-expanded="false"
-           aria-controls="details-occupancy" style="color: #9F9F9F">
+           aria-controls="details-occupancy">
             Click here for more details
             <i class="fas fa-angle-down rotate-icon"></i>
         </a>
@@ -771,17 +830,161 @@
             <div class="collapse multi-collapse" id="detail-cost-maps">
                 <div class="card card-body">
 
+                    <p>
+                        The expert is a complex cost map based on the distance to goal, the velocity of the agent,
+                        and collisions. Let \(\mathcal{C}(\mathbf{p}_t, a_t)\) be the cost of taking action \(a_t\)
+                        at position \(\mathbf{p}_t\). We estimate the <i>planning quality</i> as:
 
+                        \[
+                        \mathcal{M}(t) = \mathcal{C}(\mathbf{p}_{t+1}, a_{t+1}) - \mathcal{C}(\mathbf{p}_t, a_t)
+                        \]
+                    </p>
+
+                    <div class="card">
+                        <div class="card-header text-white bg-primary">
+                            <h5 class="card-title">How to use</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="card-text list-group list-group-flush">
+                                <li class="list-group-item">
+                                    The plot shows three different runs of the same episode using the D28-dynamics
+                                    agent presented in the paper. These are real episodes in our building.
+                                </li>
+                                <li class="list-group-item">
+                                    The heat map shows the <b>action score</b> for each action at each step. <span
+                                        style="color:blue">Blue</span> areas indicate good actions, while <span
+                                        style="color:red">red</span> areas indicate bad actions.
+                                </li>
+                                <li class="list-group-item">
+                                    Certain areas exhibit <span style="color:green">green</span> color, indicating
+                                    high superposition of good and bad actions.
+                                </li>
+                                <li class="list-group-item">
+                                    Use the \( \sigma \) slider to control the <b>smoothness</b> of the heatmap
+                                    (i.e.
+                                    the size of the kernel used for smoothing).
+                                </li>
+                                <li class="list-group-item">
+                                    Use the <b>Bad action weight</b> and <b>Good action weight</b> sliders to
+                                    control the
+                                    visibility of bad and good actions, respectively.
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 
+
+<div class="container mt-5" id="shapley-value">
+    <p class="section-title">Shapley values</p>
+
+    <p>
+        We use Shapley values to understand the importance of each inputs in the agent's decision-making process.
+        Shapley values are a method from cooperative game theory that assigns a value to each player in a game based
+        on their contribution to the game's outcome.
+    </p>
+
+    <div class="highlight">
+        Policy relies mostly on pose sensing and structured vision to navigate.
+    </div>
+
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title">Shapley values</h5>
+            <p class="card-subtitle">
+                Contribution of each input to the agent's performances. Higher values indicate higher impact on
+                Success/SPL.
+            </p>
+        </div>
+        <div class="card-body" id="shapley-container">
+            <div class="btn-group btn-group-toggle w-100 justify-content-end" data-toggle="buttons"
+                 id="violin-selector">
+                <label class="btn btn-secondary active">
+                    <input type="radio" name="options" id="violin-success" autocomplete="off"> Success
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="violin-spl" autocomplete="off" checked> SPL
+                </label>
+            </div>
+            <div class="row w-100" style="height: 500px" id="shapley-plot"></div>
+
+        </div>
+    </div>
+    <p>
+        <a class="btn btn-link" data-toggle="collapse" href="#detail-shapley" role="button" aria-expanded="false"
+           aria-controls="details-occupancy">
+            Click here for more details
+            <i class="fas fa-angle-down rotate-icon"></i>
+        </a>
+    </p>
+    <div class="row">
+        <div class="col">
+            <div class="collapse multi-collapse" id="detail-shapley">
+                <div class="card card-body">
+                    <p>
+                        In our case, the players are different inputs and the Shapley value quantifies the contribution
+                        of each
+                        input to the agent’s SR and SPL. To this end, we created a background dataset with alternative
+                        inputs derived from
+                        previously unseen scenes and systematically perturbed one input modality at every step. This was
+                        conducted separately
+                        for odometry, localization, RGB, scan, and previous action inputs.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+<script>
+    const size = "40px"
+    d3.xml("assets/robot_icon.svg").then(function (data) {
+        d3.select("#red_robot").node().append(data.documentElement);
+        d3.select("#red_robot svg")
+            .attr("width", size)
+            .attr("height", size)
+            .selectAll("path").style("fill", "red");
+    });
+    d3.xml("assets/robot_icon.svg").then(function (data) {
+        d3.select("#green_robot").node().append(data.documentElement);
+        d3.select("#green_robot svg")
+            .attr("width", size)
+            .attr("height", size)
+            .selectAll("path").style("fill", "green");
+    });
+    d3.xml("assets/robot_icon.svg").then(function (data) {
+        d3.select("#blue_robot").node().append(data.documentElement);
+        d3.select("#blue_robot svg")
+            .attr("width", size)
+            .attr("height", size)
+            .selectAll("path").style("fill", "blue");
+    });
+</script>
 
 <script src="js/dynamic_simulator.js"></script>
 <script src="js/prediction_vs_correction.js"></script>
 <script src="js/costmaps.js" type="module"></script>
+<script src="js/shapley.js"></script>
 <script src="js/video_player.js"></script>
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

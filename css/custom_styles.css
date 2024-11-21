@@ -104,7 +104,7 @@
     pointer-events: none;
     opacity: 0;
     font-size: 12px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     transform: translate(-50%, -100%);
 }
 
@@ -118,4 +118,31 @@
     bottom: -5px;
     left: 50%;
     transform: translateX(-50%);
+}
+
+.highlight{
+    width: 90%;
+    font-size: 1.5rem;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin: auto;
+    border: 2px solid #0D6EFD;
+    border-radius: 20px;
+    background-color: white;
+    filter : drop-shadow(5px 5px 5px rgba(0,0,0,0.5));
+}
+
+.hidden-button{
+/*    The button should ressemble text*/
+    background-color: transparent;
+    border: none;
+    color: #0D6EFD;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 0;
+    padding:0;
+    cursor: pointer;
 }

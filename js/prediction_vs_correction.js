@@ -1,16 +1,47 @@
 // Set dimensions and margins
-const margin = {top: 40, right: 5, bottom: 50, left: 50};
+const margin = {top: 40, right: 5, bottom: 60, left: 90, width: 2000, height: 500};
 
-const dist_to_legend = 110
+const dist_to_legend = 250
 
-
-container = document.getElementById("prediction-correction");
+const demo_action_sequences = [
+    [4, 4, 4, 4, 22, 22, 23, 22, 21, 23, 22, 22, 21, 21, 22],
+    // [5, 3, 3, 3, 21, 3, 23, 23, 11, 23, 9, 23, 22, 17, 21],
+    [5, 3, 3, 23, 11, 21, 23, 22, 21, 22, 23, 21, 21, 21, 21],
+    [17, 22, 21, 22, 22, 21, 21, 21, 22, 22, 22, 21, 21, 21, 23],
+    [22, 22, 22, 23, 25, 23, 22, 22, 22, 21, 23, 22, 22, 22, 21],
+]
+const demo_action_sequence_instant = [
+    [21, 23, 23, 1, 23, 23, 22, 22, 22, 22, 22, 1, 1, 22, 6],
+    // [1, 17, 17, 17, 1, 1, 1, 1, 17, 17, 17, 11, 11, 11, 11],
+    [3, 23, 1, 1, 23, 23, 22, 6, 23, 23, 23, 11, 11, 11, 11],
+    [21, 23, 1, 22, 23, 22, 23, 22, 21, 22, 23, 1, 11, 11, 1],
+    [1, 1, 1, 22, 22, 22, 22, 22, 22, 22, 1, 22, 22, 22, 22],
+]
 
 const svg = d3.select("#prediction-correction")
     .append("svg")
+    .attr("viewBox", `0 0 ${margin.width} ${margin.height}`)
     .attr("width", '100%')
     .attr("height", '100%')
+    .attr("preserveAspectRatio", "xMidYMid meet")
     .append("g");
+
+
+const gt_positions = demo_action_sequences.map(
+    actionSeq => simulateDBelief(
+        default_params,
+        actionSeq,
+        false
+    )
+)
+
+const gt_positions_instant = demo_action_sequence_instant.map(
+    actionSeq => simulateDBelief(
+        default_params_instant,
+        actionSeq,
+        true
+    )
+)
 
 // Add a tooltip to how the map on hover
 let kalman_tooltip = d3.select("body")
@@ -27,67 +58,49 @@ const tooltip_text = kalman_tooltip.append("div")
     .attr("class", "tooltip-text")
 
 
-const tooltip_map = tooltip_svg.append("svg:image")
-    .attr('x', 0)
-    .attr('y', 0)
-    .attr('width', tooltip_svg.attr('width'))
-    .attr('height', tooltip_svg.attr('height'))
-    .attr("xlink:href", "assets/map.png")
-
-// Small legend
 tooltip_svg.append("rect")
     .attr("x", 0)
     .attr("y", 0)
-    .attr("width", 110)
-    .attr("height", 35)
-    .attr("fill", "white")
+    .attr("width", tooltip_svg.attr("width"))
+    .attr("height", tooltip_svg.attr("height"))
+    .attr("fill", "#EFEFEF")
     .attr("rx", 5)
-    .attr("ry", 5)
 
-tooltip_svg.append("line")
-    .attr("x1", 10)
-    .attr("y1", 10)
-    .attr("x2", 30)
-    .attr("y2", 10)
-    .attr("stroke", "black")
-    .attr("stroke-width", 2)
 
-tooltip_svg.append("text")
-    .attr("x", 35)
-    .attr("y", 15)
-    .text("In-domain")
-    .style("font-size", "12px")
+const tooltip_xScale = d3.scaleLinear().range([10, 190])
+const tooltip_yScale = d3.scaleLinear().range([190, 10])
 
-tooltip_svg.append("line")
-    .attr("x1", 10)
-    .attr("y1", 25)
-    .attr("x2", 30)
-    .attr("y2", 25)
-    .attr("stroke", "red")
-    .attr("stroke-width", 2)
 
-tooltip_svg.append("text")
-    .attr("x", 35)
-    .attr("y", 30)
-    .text("Corrupted")
-    .style("font-size", "12px")
+function simulateDBelief(params, actionSeq, is_instant = false) {
+    let state = {
+        acc: {v: 0, w: 0},
+        vel: {v: 0, w: 0},
+        pos: {x: 0, y: 0, theta: 0}
+    }
+    const num_steps = (is_instant) ? 1 : 10
+    let physics_param = getPhysicsParams(params)
+    const dt = (is_instant) ? 1 / 3 : 1 / 30
+    let positions = []
+    for (let i = 0; i < actionSeq.length; i++) {
+        const cmd = actionIdToCommand(actionSeq[i], max_vel);
+        for (let step = 0; step < num_steps; step++) {
+            state = dynamics(state, cmd, physics_param, dt)
+        }
+        positions.push({x: state.pos.x, y: state.pos.y})
+    }
+    return positions
+}
 
-let positions = simulateTrajectory(params)
-const [tooltip_xScale, tooltip_yScale] = getScalesImg(tooltip_map)
+// Add Axis
+tooltip_svg.append("g")
+    .attr("id", "tooltip-x-axis")
 
-tooltip_svg.append("path")
-    .datum(positions.map((d) => [d.x, d.y]))
-    .attr("fill", "none")
-    .attr("stroke", "black")
-    .attr("stroke-width", 1)
-    .attr("d", d3.line()
-        .x(d => tooltip_xScale(d[0]))
-        .y(d => tooltip_yScale(d[1])))
-tooltip_svg.append("path")
-    .attr("id", "pred_corr_path")
-    .attr("fill", "none")
-    .attr("stroke", "red")
-    .attr("stroke-width", 1)
+
+tooltip_svg.append("g")
+    .attr("id", "tooltip-y-axis")
+
+const seqColorMap = d3.scaleOrdinal(d3.schemeCategory10)
+
 
 function getScalesImg(imageObject) {
     const imageAspectRatio = 694 / 706
@@ -125,42 +138,35 @@ d3.csv("assets/data_d28_dyn.csv").then(data_dyn => {
             d3.csv("assets/data_d28_instant_dyn.csv").then(data_dyn_instant => {
 
 
-                const graph_size = (container.offsetWidth - dist_to_legend) / 2
+                const graph_size = (margin.width - dist_to_legend) / 2
                 const xScale = d3.scaleLinear()
                     .range([margin.left, graph_size])
                     .domain([0, 2.0])
 
                 const yScale = d3.scaleLinear()
-                    .range([container.offsetHeight - margin.bottom, margin.top])
+                    .range([margin.height - margin.bottom, margin.top])
 
                 const xScale2 = d3.scaleLinear()
-                    .range([graph_size + margin.left, container.offsetWidth - margin.right - dist_to_legend - margin.right])
+                    .range([graph_size + margin.left, margin.width - margin.right - dist_to_legend - margin.right])
                     .domain([0, 2.0])
 
 
                 const yScale2 = d3.scaleLinear()
-                    .range([container.offsetHeight - margin.bottom, margin.top])
+                    .range([margin.height - margin.bottom, margin.top])
 
                 // Add graph titles
                 svg.append("text")
                     .attr("transform", `translate(${xScale(1.0)},${margin.top / 2})`)
                     .style("text-anchor", "middle")
-                    .text("Velocity, disc(28)")
-                    .style("font-size", "12px")
-                    .style("font-weight", "bold")
-
-                svg.append("text")
-                    .attr("transform", `translate(${xScale(1.0)},${margin.top- 5})`)
-                    .style("text-anchor", "middle")
-                    .text("+ dynamics")
-                    .style("font-size", "12px")
+                    .text("D28-dynamics")
+                    .style("font-size", "2.5rem")
                     .style("font-weight", "bold")
 
                 svg.append("text")
                     .attr("transform", `translate(${xScale2(1.0)},${margin.top / 2 + 10})`)
                     .style("text-anchor", "middle")
-                    .text("Velocity, disc(28)")
-                    .style("font-size", "12px")
+                    .text("D28-instant")
+                    .style("font-size", "2.5rem")
                     .style("font-weight", "bold")
 
                 // Add grid and background
@@ -168,7 +174,7 @@ d3.csv("assets/data_d28_dyn.csv").then(data_dyn => {
                     .attr("x", margin.left)
                     .attr("y", margin.top)
                     .attr("width", graph_size - margin.left)
-                    .attr("height", container.offsetHeight - margin.top - margin.bottom)
+                    .attr("height", margin.height - margin.top - margin.bottom)
                     .attr("fill", "#EFEFEF")
                     .attr("stroke", "#9B9B9B")
 
@@ -176,21 +182,22 @@ d3.csv("assets/data_d28_dyn.csv").then(data_dyn => {
                     .attr("x", graph_size + margin.left)
                     .attr("y", margin.top)
                     .attr("width", graph_size - margin.left - 2 * margin.right)
-                    .attr("height", container.offsetHeight - margin.top - margin.bottom)
+                    .attr("height", margin.height - margin.top - margin.bottom)
                     .attr("fill", "#EFEFEF")
                     .attr("stroke", "#9B9B9B")
 
                 // Add a legend
-                const legend_fontsize = "12px"
+                const legend_fontsize = "2rem"
                 let legend = svg.append("g")
-                    .attr("opacity", 0.75)
-                    .attr("transform", `translate(${container.offsetWidth - dist_to_legend - margin.right},${margin.top + 5})`)
+                    // .attr("opacity", 0.75)
+                    .attr("transform", `translate(${margin.width - dist_to_legend - margin.right},${margin.top + 5})`)
 
+                const legend_height = 200
                 legend.append("rect")
                     .attr("x", 0)
                     .attr("y", 0)
-                    .attr("width", 110)
-                    .attr("height", 55)
+                    .attr("width", dist_to_legend)
+                    .attr("height", legend_height)
                     .attr("fill", "#FFFFFF")
                     .attr("rx", 5)
                     .attr("ry", 5)
@@ -203,14 +210,14 @@ d3.csv("assets/data_d28_dyn.csv").then(data_dyn => {
                     .data(legend_items)
                     .enter()
                     .append("g")
-                    .attr("transform", (d, i) => `translate(10,${10 + 12 * i})`)
+                    .attr("transform", (d, i) => `translate(20,${20 + i * (dist_to_legend - 40) / 4})`)
                     .attr("class", "legend-item")
                     .each(function (d) {
                         let item = d3.select(this)
                         item.append("circle")
-                            .attr("cx", 0)
+                            .attr("cx", -5)
                             .attr("cy", 0)
-                            .attr("r", 4)
+                            .attr("r", 10)
                             .attr("fill", d[1])
 
                         item.append("text")
@@ -249,34 +256,41 @@ d3.csv("assets/data_d28_dyn.csv").then(data_dyn => {
                         .attr("id", "x-axis")
                         .attr("transform", `translate(0,${yScale(0)})`)
                         .call(d3.axisBottom(xScale))
+                        .style("font-size", "1.5rem")
 
                     svg.append("g")
                         .attr("id", "y-axis")
                         .attr("transform", `translate(${xScale(0)},0)`)
                         .call(d3.axisLeft(yScale))
+                        .style("font-size", "1.5rem")
 
                     svg.append("g")
                         .attr("id", "x-axis2")
                         .attr("transform", `translate(0,${yScale2(0)})`)
                         .call(d3.axisBottom(xScale2))
+                        .style("font-size", "1.5rem")
 
                     svg.append("g")
                         .attr("id", "y-axis2")
                         .attr("transform", `translate(${xScale2(0)},0)`)
                         .call(d3.axisLeft(yScale2))
+                        .style("font-size", "1.5rem")
 
 
                     // Add labels
                     svg.append("text")
-                        .attr("transform", `translate(${container.offsetWidth / 2},${container.offsetHeight - 10})`)
+                        .attr("transform", `translate(${margin.width / 2 - dist_to_legend / 2},${margin.height})`)
                         .style("text-anchor", "middle")
                         .text("Distance to belief")
+                        .style("font-size", "2rem")
 
                     svg.append("text")
                         .attr("id", "y-label")
-                        .attr("transform", `translate(${margin.left / 3},${container.offsetHeight / 2}) rotate(-90)`)
+                        .attr("transform", `translate(${0},${margin.height / 2}) rotate(-90)`)
                         .style("text-anchor", "middle")
+                        .attr("dominant-baseline", "hanging")
                         .text(metric)
+                        .style("font-size", "2rem")
 
 
                     // Plot data points
@@ -286,7 +300,7 @@ d3.csv("assets/data_d28_dyn.csv").then(data_dyn => {
                         .attr("class", "dot_dyn")
                         .attr("cx", d => xScale(d.distance))
                         .attr("cy", d => yScale(d[metric]))
-                        .attr("r", 4)
+                        .attr("r", 5)
                         .attr("fill", d => {
                             if (d.test_type === "damping") {
                                 return "#3b75af";
@@ -297,11 +311,7 @@ d3.csv("assets/data_d28_dyn.csv").then(data_dyn => {
                             }
                         })
                         .on("mouseover", function (event, d) {
-                            kalman_tooltip.transition()
-                                .duration(200)
-                                .style("opacity", 1)
-                                .style("left", (event.pageX) + "px")
-                                .style("top", (event.pageY - 28) + "px");
+
 
                             const pred_corr_params = {
                                 damp: {
@@ -312,21 +322,17 @@ d3.csv("assets/data_d28_dyn.csv").then(data_dyn => {
                                     w: {acc: d["turn_acc_time"], brk: d["turn_brk_time"]}
                                 }, maxvel: {v: d["forward_max_vel"], w: d["turn_max_vel"]}
                             }
-                            let positions = simulateTrajectory(pred_corr_params)
 
-                            tooltip_svg.selectAll("#pred_corr_path")
-                                .datum(positions.map((d) => [d.x, d.y]))
-                                .attr("d", d3.line()
-                                    .x(d => tooltip_xScale(d[0]))
-                                    .y(d => tooltip_yScale(d[1])))
-
-                            tooltip_text.selectAll("*").remove()
-                            tooltip_text.append("h6")
-                                .text((d.test_type === "damping") ? "Damping" : (d.test_type === "time") ? "Response Time" : "Max Velocity")
-                                .attr("class", "text-center")
-
-                            tooltip_text.append("p")
-                                .text(`Dist. to belief: ${parseFloat(d.distance).toFixed(4)}`)
+                            positions = demo_action_sequences.map(
+                                actionSeq => simulateDBelief(pred_corr_params, actionSeq)
+                            )
+                            updateTooltip(
+                                event,
+                                positions,
+                                (d.test_type === "damping") ? "Damping" : (d.test_type === "time") ? "Response Time" : "Max Velocity",
+                                d.distance,
+                                false
+                            )
 
                         })
                         .on("mouseout", function () {
@@ -341,7 +347,7 @@ d3.csv("assets/data_d28_dyn.csv").then(data_dyn => {
                         .attr("class", "dot_dyn_instant")
                         .attr("cx", d => xScale2(d.distance))
                         .attr("cy", d => yScale2(d[metric]))
-                        .attr("r", 4)
+                        .attr("r", 5)
                         .attr("fill", d => {
                             if (d.test_type === "damping") {
                                 return "#3b75af";
@@ -367,22 +373,17 @@ d3.csv("assets/data_d28_dyn.csv").then(data_dyn => {
                                     w: {acc: d["turn_acc_time"], brk: d["turn_brk_time"]}
                                 }, maxvel: {v: d["forward_max_vel"], w: d["turn_max_vel"]}
                             }
-                            let positions = simulateTrajectory(pred_corr_params)
+                            let positions = demo_action_sequence_instant.map(
+                                actionSeq => simulateDBelief(pred_corr_params, actionSeq)
+                            )
 
-                            tooltip_svg.selectAll("#pred_corr_path")
-                                .datum(positions.map((d) => [d.x, d.y]))
-                                .attr("d", d3.line()
-                                    .x(d => tooltip_xScale(d[0]))
-                                    .y(d => tooltip_yScale(d[1])))
-
-                            tooltip_text.selectAll("*").remove()
-                            tooltip_text.append("h6")
-                                .text((d.test_type === "damping") ? "Damping" : (d.test_type === "time") ? "Response Time" : "Max Velocity")
-                                .attr("class", "text-center")
-
-                            tooltip_text.append("p")
-                                .text(`Dist. to belief: ${parseFloat(d.distance).toFixed(4)}`)
-
+                            updateTooltip(
+                                event,
+                                positions,
+                                (d.test_type === "damping") ? "Damping" : (d.test_type === "time") ? "Response Time" : "Max Velocity",
+                                d.distance,
+                                true
+                            )
                         })
                         .on("mouseout", function () {
                             kalman_tooltip.transition()
@@ -396,7 +397,7 @@ d3.csv("assets/data_d28_dyn.csv").then(data_dyn => {
                         .attr("class", "dot_odom")
                         .attr("cx", d => xScale(d.distance))
                         .attr("cy", d => yScale(d[metric]))
-                        .attr("r", 4)
+                        .attr("r", 5)
                         .attr("fill", "#8d69b8")
                         .on("mouseover", function (event, d) {
                             kalman_tooltip.transition()
@@ -410,21 +411,17 @@ d3.csv("assets/data_d28_dyn.csv").then(data_dyn => {
                             const covar_xth = parseFloat(d.covar_xth)
                             const covar_thth = parseFloat(d.covar_thth)
 
-                            noisy_pos = add_noise(positions, bias, covar_xx, covar_xth, covar_thth)
 
-                            tooltip_svg.selectAll("#pred_corr_path")
-                                .datum(noisy_pos.map((d) => [d.x, d.y]))
-                                .attr("d", d3.line()
-                                    .x(d => tooltip_xScale(d[0]))
-                                    .y(d => tooltip_yScale(d[1])))
-                            tooltip_text.selectAll("*").remove()
-                            tooltip_text.append("h6")
-                                .text(`Odometry noise`)
-                                .attr("class", "text-center")
-
-                            tooltip_text.append("p")
-                                .text(`Dist. to belief: ${parseFloat(d.distance).toFixed(4)}`)
-
+                            let noisy_pos = gt_positions.map(
+                                (d) => add_noise(d, bias, covar_xx, covar_xth, covar_thth)
+                            )
+                            updateTooltip(
+                                event,
+                                noisy_pos,
+                                "Odometry noise",
+                                d.distance,
+                                false
+                            )
                         })
                         .on("mouseout", function () {
                             kalman_tooltip.transition()
@@ -437,7 +434,7 @@ d3.csv("assets/data_d28_dyn.csv").then(data_dyn => {
                         .attr("class", "dot_odom_instant")
                         .attr("cx", d => xScale2(d.distance))
                         .attr("cy", d => yScale2(d[metric]))
-                        .attr("r", 4)
+                        .attr("r", 5)
                         .attr("fill", "#8d69b8")
                         .on("mouseover", function (event, d) {
                             kalman_tooltip.transition()
@@ -451,20 +448,17 @@ d3.csv("assets/data_d28_dyn.csv").then(data_dyn => {
                             const covar_xth = parseFloat(d.covar_xth)
                             const covar_thth = parseFloat(d.covar_thth)
 
-                            noisy_pos = add_noise(positions, bias, covar_xx, covar_xth, covar_thth)
+                            let noisy_pos = gt_positions_instant.map(
+                                (d) => add_noise(d, bias, covar_xx, covar_xth, covar_thth)
+                            )
+                            updateTooltip(
+                                event,
+                                noisy_pos,
+                                "Odometry noise",
+                                d.distance,
+                                true
+                            )
 
-                            tooltip_svg.selectAll("#pred_corr_path")
-                                .datum(noisy_pos.map((d) => [d.x, d.y]))
-                                .attr("d", d3.line()
-                                    .x(d => tooltip_xScale(d[0]))
-                                    .y(d => tooltip_yScale(d[1])))
-                            tooltip_text.selectAll("*").remove()
-                            tooltip_text.append("h6")
-                                .text(`Odometry noise`)
-                                .attr("class", "text-center")
-
-                            tooltip_text.append("p")
-                                .text(`Dist. to belief: ${parseFloat(d.distance).toFixed(4)}`)
 
                         })
                         .on("mouseout", function () {
@@ -506,6 +500,7 @@ d3.csv("assets/data_d28_dyn.csv").then(data_dyn => {
 
                     svg.select("#y-label")
                         .text(metric)
+                        .style("font-size", "2rem")
 
                     svg.selectAll(".dot_dyn")
                         .transition()
@@ -610,4 +605,93 @@ function choleskyDecomposition(matrix) {
         }
     }
     return L;
+}
+
+function updateTooltip(event, positions, txt, distance, isInstant) {
+    kalman_tooltip.transition()
+        .duration(200)
+        .style("opacity", 1)
+        .style("left", (event.pageX) + "px")
+        .style("top", (event.pageY - 28) + "px");
+
+
+    let current_gt_pos = (isInstant) ? gt_positions_instant : gt_positions
+
+    const [xMax, xMin] = d3.extent(current_gt_pos.map(d => d.map(d => d.x)).flat())
+    const [yMax, yMin] = d3.extent(current_gt_pos.map(d => d.map(d => d.y)).flat())
+    const maxRange = d3.max([Math.abs(xMin), Math.abs(xMax), Math.abs(yMin), Math.abs(yMax)])
+    const f = 1.1;
+    tooltip_xScale.domain([f * maxRange, -f * maxRange])
+    tooltip_yScale.domain([f * maxRange, -f * maxRange])
+
+    d3.select("#tooltip-y-axis")
+        .attr("transform", `translate(${tooltip_xScale(0)},0)`)
+        .call(d3.axisLeft(tooltip_yScale).ticks(5))
+        .attr("font-size", "1rem")
+        .attr("color", "#000000")
+
+    d3.select("#tooltip-x-axis")
+        .attr("transform", `translate(0,${tooltip_yScale(0)})`)
+        .call(d3.axisBottom(tooltip_xScale).ticks(5))
+        .attr("font-size", "1rem")
+        .attr("color", "#000000")
+
+    tooltip_svg.selectAll(".GT-path").remove()
+    tooltip_svg.selectAll(".GT-path")
+        .data(current_gt_pos)
+        .enter()
+        .append("path")
+        .attr("class", "GT-path")
+        .datum(d => d.map((d) => [d.x, d.y]))
+        .attr("fill", "none")
+        .attr("stroke", (d, i) => seqColorMap(i))
+        .attr("stroke-width", 2)
+        .attr("d", d3.line()
+            .x(d => tooltip_xScale(d[0]))
+            .y(d => tooltip_yScale(d[1])))
+
+
+    tooltip_svg.selectAll(".pred-path").remove()
+    tooltip_svg.selectAll(".pred-path")
+        .data(positions)
+        .enter()
+        .append("path")
+        .attr("class", "pred-path")
+        .datum(d => d.map((d) => [d.x, d.y]))
+        .attr("fill", "none")
+        .attr("stroke", (d, i) => seqColorMap(i))
+        .attr("stroke-dasharray", "5,5")
+        .attr("stroke-width", 1)
+        .attr("d", d3.line()
+            .x(d => tooltip_xScale(d[0]))
+            .y(d => tooltip_yScale(d[1])))
+
+    // Paint the area between gt_positions and positions
+    tooltip_svg.selectAll(".areas").remove()
+    tooltip_svg.selectAll(".areas")
+        .data(current_gt_pos.map((d, i) => [d, positions[i]]))
+        .enter()
+        .append("path")
+        .attr("class", "areas")
+        .datum(d => [d[0].map(d => [d.x, d.y]), d[1].map(d => [d.x, d.y])])
+        .attr("fill", (d, i) => seqColorMap(i))
+        .attr("fill-opacity", 0.2)
+        .attr("stroke", "none")
+        .attr("d", d => {
+            let area = d3.area()
+                .x(d => tooltip_xScale(d[0]))
+                .y0(d => tooltip_yScale(d[1]))
+            // Add (0, 0) to at first and last point to close the area
+            d[0].unshift([0, 0])
+            d[1].unshift([0, 0])
+            return area(d[0].concat(d[1].reverse()))
+        })
+
+    tooltip_text.selectAll("*").remove()
+    tooltip_text.append("h6")
+        .text(txt)
+        .attr("class", "text-center")
+
+    tooltip_text.append("p")
+        .text(`Dist. to belief: ${parseFloat(distance).toFixed(4)}`)
 }

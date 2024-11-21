@@ -1,3 +1,4 @@
+const costmap_margins = {top: 10, right: 10, bottom: 30, left: 10, width: 300, height: 300};
 const episodeSelect = document.getElementById("episodeSelect");
 for (let i = 0; i < 20; i++) {
     const option = document.createElement("option");
@@ -211,22 +212,28 @@ d3.json("assets/costmap.json").then(async data => {
     const svgs = cols.map((col, i) => {
         return col.append("svg")
             .attr("id", `costmap_sample${i + 1}`)
+            .attr("viewBox", `0 0 ${costmap_margins.width} ${costmap_margins.height}`)
             .attr("width", '100%')
             .attr("height", '100%')
+            .attr("preserveAspectRatio", "xMidYMid meet")
     })
 
     svgs.forEach((svg, i) => {
         svg.append("image")
             .attr("id", `costmap_image${i + 1}`)
-            .attr('x', 0)
-            .attr('y', 0)
+            .attr('x', costmap_margins.left)
+            .attr('y', costmap_margins.top)
             .attr("xlink:href", "assets/occupancy.bmp")
-            .attr("width", "100%")
-            .attr("height", "100%")
+            .attr("width", costmap_margins.width - costmap_margins.left - costmap_margins.right)
+            .attr("height", costmap_margins.height - costmap_margins.top - costmap_margins.bottom)
     })
 
-
-    const [xScale, yScale] = getScalesImg(svgs[0].select("#costmap_image1"))
+    const xScale = d3.scaleLinear()
+        .domain([-6.713828086853027, 14.106171447783709])
+        .range([costmap_margins.left, costmap_margins.width - costmap_margins.right])
+    const yScale = d3.scaleLinear()
+        .domain([-16.0518543086946, 5.128145217895508])
+        .range([costmap_margins.height - costmap_margins.bottom, costmap_margins.top])
 
     const imgWidth = parseInt(xScale.range()[1] - xScale.range()[0])
     const imgHeight = parseInt(yScale.range()[0] - yScale.range()[1])
