@@ -99,7 +99,7 @@ tooltip_svg.append("g")
 tooltip_svg.append("g")
     .attr("id", "tooltip-y-axis")
 
-const seqColorMap = d3.scaleOrdinal(d3.schemeCategory10)
+const seqColorMap = d3.scaleOrdinal(d3.schemeTableau10)
 
 
 function getScalesImg(imageObject) {
@@ -636,6 +636,10 @@ function updateTooltip(event, positions, txt, distance, isInstant) {
         .attr("font-size", "1rem")
         .attr("color", "#000000")
 
+    const shift = 5
+    for (let i=0; i<shift; i++) {
+        let dummy = seqColorMap(i)
+    }
     tooltip_svg.selectAll(".GT-path").remove()
     tooltip_svg.selectAll(".GT-path")
         .data(current_gt_pos)
@@ -644,12 +648,11 @@ function updateTooltip(event, positions, txt, distance, isInstant) {
         .attr("class", "GT-path")
         .datum(d => d.map((d) => [d.x, d.y]))
         .attr("fill", "none")
-        .attr("stroke", (d, i) => seqColorMap(i))
+        .attr("stroke", (d, i) => seqColorMap(i+shift))
         .attr("stroke-width", 2)
         .attr("d", d3.line()
             .x(d => tooltip_xScale(d[0]))
             .y(d => tooltip_yScale(d[1])))
-
 
     tooltip_svg.selectAll(".pred-path").remove()
     tooltip_svg.selectAll(".pred-path")
@@ -659,7 +662,7 @@ function updateTooltip(event, positions, txt, distance, isInstant) {
         .attr("class", "pred-path")
         .datum(d => d.map((d) => [d.x, d.y]))
         .attr("fill", "none")
-        .attr("stroke", (d, i) => seqColorMap(i))
+        .attr("stroke", (d, i) => seqColorMap(i+shift))
         .attr("stroke-dasharray", "5,5")
         .attr("stroke-width", 1)
         .attr("d", d3.line()
@@ -674,7 +677,7 @@ function updateTooltip(event, positions, txt, distance, isInstant) {
         .append("path")
         .attr("class", "areas")
         .datum(d => [d[0].map(d => [d.x, d.y]), d[1].map(d => [d.x, d.y])])
-        .attr("fill", (d, i) => seqColorMap(i))
+        .attr("fill", (d, i) => seqColorMap(i+shift))
         .attr("fill-opacity", 0.2)
         .attr("stroke", "none")
         .attr("d", d => {
