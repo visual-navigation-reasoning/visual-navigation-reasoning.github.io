@@ -1022,3 +1022,8 @@ d3.select("#episode-selector").selectAll("label").on("click", function () {
     const ep = d3.select(this).select("input").attr("id");
     d3.select("#ep-video").attr("src", `assets/episodes/${ep}.mp4`)
 });
+
+d3.select("#episode-selector_sim").selectAll("label").on("click", function () {
+    const ep = d3.select(this).select("input").attr("id");
+    d3.select("#ep-video_sim").attr("src", `assets/episodes_sim/${ep}.mp4`)
+});

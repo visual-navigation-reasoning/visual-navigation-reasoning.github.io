@@ -392,13 +392,13 @@
             <div>
                 <div class="d-flex justify-content-between mt-3">
                     <div>
-                        <span id="green_robot"></span> D28 with dynamics
+                        <span class="green_robot"></span> D28 with dynamics
                     </div>
                     <div>
-                        <span id="blue_robot"></span> D28 instantaneous (no dynamics)
+                        <span class="blue_robot"></span> D28 instantaneous (no dynamics)
                     </div>
                     <div>
-                        <span id="red_robot"></span> D4 (no dynamics)
+                        <span class="red_robot"></span> D4 (no dynamics)
                     </div>
                 </div>
             </div>
@@ -427,6 +427,7 @@
             </div>
         </div>
     </div>
+
 
 
     <div class="table-hover table table-responsive mt-5">
@@ -495,6 +496,54 @@
             </tr>
             </tbody>
         </table>
+    </div>
+
+
+
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title">Compare agents for <b>simulated world</b> navigation</h5>
+            <p class="card-subtitle">
+                Simulated experiments in a dynamic-aware environment.
+            </p>
+            <div>
+                <div class="d-flex justify-content-between mt-3">
+                    <div>
+                        <span class="green_robot"></span> D28 with dynamics
+                    </div>
+                    <div>
+                        <span class="blue_robot"></span> D28 instantaneous (no dynamics)
+                    </div>
+                    <div>
+                        <span class="red_robot"></span> D4 (no dynamics)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="btn-group btn-group-toggle w-100 justify-content-end" data-toggle="buttons"
+                 id="episode-selector_sim">
+                <label class="btn btn-secondary active">
+                    <input type="radio" name="options" id="episode_01_sim" autocomplete="off" checked> Episode 1
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="episode_02_sim" autocomplete="off"> Episode 2
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="episode_03_sim" autocomplete="off"> Episode 3
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="episode_04_sim" autocomplete="off"> Episode 4
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="episode_05_sim" autocomplete="off"> Episode 5
+                </label>
+            </div>
+            <div class="w-100 mt-3">
+                <video controls autoplay muted src="assets/episodes_sim/episode_01_sim.mp4" class="w-100" id="ep-video_sim"></video>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -958,27 +1007,26 @@
 
 <script>
     const size = "40px"
-    d3.xml("assets/robot_icon.svg").then(function (data) {
-        d3.select("#red_robot").node().append(data.documentElement);
-        d3.select("#red_robot svg")
-            .attr("width", size)
-            .attr("height", size)
-            .selectAll("path").style("fill", "red");
+
+    Array.from(document.getElementsByClassName("red_robot")).forEach(span => {
+        d3.xml("assets/robot_icon.svg").then(function (data) {
+            span.append(data.documentElement)
+            d3.select(span).select("svg").attr("width", size).attr("height", size).selectAll("path").style("fill", "red");
+        })
     });
-    d3.xml("assets/robot_icon.svg").then(function (data) {
-        d3.select("#green_robot").node().append(data.documentElement);
-        d3.select("#green_robot svg")
-            .attr("width", size)
-            .attr("height", size)
-            .selectAll("path").style("fill", "green");
+    Array.from(document.getElementsByClassName("blue_robot")).forEach(span => {
+        d3.xml("assets/robot_icon.svg").then(function (data) {
+            span.append(data.documentElement)
+            d3.select(span).select("svg").attr("width", size).attr("height", size).selectAll("path").style("fill", "blue");
+        })
     });
-    d3.xml("assets/robot_icon.svg").then(function (data) {
-        d3.select("#blue_robot").node().append(data.documentElement);
-        d3.select("#blue_robot svg")
-            .attr("width", size)
-            .attr("height", size)
-            .selectAll("path").style("fill", "blue");
+    Array.from(document.getElementsByClassName("green_robot")).forEach(span => {
+        d3.xml("assets/robot_icon.svg").then(function (data) {
+            span.append(data.documentElement)
+            d3.select(span).select("svg").attr("width", size).attr("height", size).selectAll("path").style("fill", "green");
+        })
     });
+
 </script>
 
 <script src="js/dynamic_simulator.js"></script>
