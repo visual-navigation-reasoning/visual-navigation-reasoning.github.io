@@ -346,34 +346,15 @@
 <br/>
 
 <script>
-    function getDocHeight(doc) {
-        doc = doc || document;
-        // stackoverflow.com/questions/1145850/
-        var body = doc.body, html = doc.documentElement;
-        var height = Math.max( body.scrollHeight, body.offsetHeight,
-            html.clientHeight, html.scrollHeight, html.offsetHeight );
-        return height;
-    }
-
-    function setIframeHeight(ifrm) {
-        var doc = ifrm.contentDocument? ifrm.contentDocument:
-            ifrm.contentWindow.document;
-        ifrm.style.visibility = 'hidden';
-        ifrm.style.height = "10px"; // reset to minimal height ...
-        // IE opt. for bing/msn needs a bit added or scrollbar appears
-        ifrm.style.height = getDocHeight( doc ) + 4 + "px";
-        ifrm.style.visibility = 'visible';
-    }
-
-
-    const iframes = document.getElementsByClassName('iframe-dynamic')
-
-    for (let i = 0; i < iframes.length; i++) {
-        iframes[i].onload = function() {
-            setIframeHeight(this);
+    window.addEventListener('message', function (event) {
+        // Optionally, check event.origin to allow only messages from trusted sources
+        const iframes = document.getElementsByClassName('iframe-dynamic');
+        for (let i = 0; i < iframes.length; i++) {
+            if (iframes[i].contentWindow === event.source) {
+                iframes[i].style.height = (event.data.height + 70) + "px";
+            }
         }
-    }
-
+    });
 </script>
 
 <!-- Bootstrap core JS-->
