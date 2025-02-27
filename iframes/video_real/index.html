@@ -64,6 +64,12 @@
         d3.select("#ep-video").attr("src", `assets/episodes/${ep}.mp4`)
     });
 </script>
-
+<script>
+    window.onload = function () {
+        parent.postMessage({
+            height: document.body.scrollHeight
+        }, '*');
+    };
+</script>
 </body>
 </html>

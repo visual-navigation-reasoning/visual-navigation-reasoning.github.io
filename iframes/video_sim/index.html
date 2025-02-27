@@ -68,5 +68,12 @@
     });
 
 </script>
+<script>
+    window.onload = function () {
+        parent.postMessage({
+            height: document.body.scrollHeight
+        }, '*');
+    };
+</script>
 </body>
 </html>
