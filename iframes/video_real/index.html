@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Videos</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+
+</head>
+<body>
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="card-title">Compare agents for <b>Real world</b> navigation</h5>
+        <p class="card-subtitle">
+            Real experiments <b>replayed</b> in simulation.
+        </p>
+        <div>
+            <div class="d-flex justify-content-between mt-3">
+                <div>
+                    <span class="green_robot"><img src="assets/robot_icon_green.svg" width="20px"></span> D28 with
+                    dynamics
+                </div>
+                <div>
+                    <span class="blue_robot"><img src="assets/robot_icon_blue.svg" width="20px"></span> D28
+                    instantaneous (no dynamics)
+                </div>
+                <div>
+                    <span class="red_robot"><img src="assets/robot_icon_red.svg" width="20px"></span> D4 (no dynamics)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="btn-group btn-group-toggle w-100 justify-content-end" data-toggle="buttons"
+             id="episode-selector">
+            <label class="btn btn-secondary active">
+                <input type="radio" name="options" id="episode_01" autocomplete="off" checked> Episode 1
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="options" id="episode_02" autocomplete="off"> Episode 2
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="options" id="episode_03" autocomplete="off"> Episode 3
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="options" id="episode_04" autocomplete="off"> Episode 4
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="options" id="episode_05" autocomplete="off"> Episode 5
+            </label>
+        </div>
+        <div class="w-100">
+            <video controls autoplay muted src="assets/episodes/episode_01.mp4" class="w-100" id="ep-video"></video>
+        </div>
+    </div>
+</div>
+
+<script>
+    d3.select("#episode-selector").selectAll("label").on("click", function () {
+        const ep = d3.select(this).select("input").attr("id");
+        d3.select("#ep-video").attr("src", `assets/episodes/${ep}.mp4`)
+    });
+</script>
+
+</body>
+</html>
