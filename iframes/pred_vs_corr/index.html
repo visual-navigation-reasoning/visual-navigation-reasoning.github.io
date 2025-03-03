@@ -5,124 +5,132 @@
     <title>Prediction Vs Correction</title>
 
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-          integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-          crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-          integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-          crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
 
-  <!-- MathJax -->
-  <script type="text/javascript" id="MathJax-script" async
-          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
+    <!-- MathJax -->
+    <script type="text/javascript" id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
-          integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-          crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
 
-  <style>
-    .tooltip {
-      position: absolute;
-      padding: 8px;
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      border-radius: 5px;
-      pointer-events: none;
-      opacity: 0;
-      font-size: 12px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      transform: translate(-50%, -100%);
-    }
-  </style>
+    <style>
+        body {
+            background-color: transparent;
+        }
+
+        .card {
+            background-color: transparent;
+        }
+
+        .tooltip {
+            position: absolute;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 5px;
+            pointer-events: none;
+            opacity: 0;
+            font-size: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transform: translate(-50%, -100%);
+        }
+    </style>
 </head>
 <body>
 
 
 <div class="card mt-4">
-  <div class="card-header">
-    <h5 class="card-title">Prediction vs. Correction</h5>
-    <p class="card-subtitle">
-      We measure the robustness of the agent against variation in dynamics/odometry parameters. Its
-      sensitivity
-      informs us about the agent's reliance on prediction and correction.
-    </p>
-  </div>
-  <div class="card-body">
-    <div class="btn-group btn-group-toggle w-100 justify-content-end" data-toggle="buttons"
-         id="metric-selector">
-      <label class="btn btn-secondary active">
-        <input type="radio" name="options" id="Success" autocomplete="off" checked> Success
-      </label>
-      <label class="btn btn-secondary">
-        <input type="radio" name="options" id="SPL" autocomplete="off"> SPL
-      </label>
-      <label class="btn btn-secondary">
-        <input type="radio" name="options" id="SCT" autocomplete="off"> SCT
-      </label>
-      <label class="btn btn-secondary">
-        <input type="radio" name="options" id="Soft SPL" autocomplete="off"> Soft SPL
-      </label>
-      <label class="btn btn-secondary">
-        <input type="radio" name="options" id="Distance to Goal" autocomplete="off"> Distance to Goal
-      </label>
+    <div class="card-header">
+        <h5 class="card-title">Prediction vs. Correction</h5>
+        <p class="card-subtitle">
+            We measure the robustness of the agent against variation in dynamics/odometry parameters. Its
+            sensitivity
+            informs us about the agent's reliance on prediction and correction.
+        </p>
     </div>
-    <div id="prediction-correction" style="width:100%; height: 300px"></div>
-  </div>
+    <div class="card-body">
+        <div class="btn-group btn-group-toggle w-100 justify-content-end" data-toggle="buttons"
+             id="metric-selector">
+            <label class="btn btn-secondary active">
+                <input type="radio" name="options" id="Success" autocomplete="off" checked> Success
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="options" id="SPL" autocomplete="off"> SPL
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="options" id="SCT" autocomplete="off"> SCT
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="options" id="Soft SPL" autocomplete="off"> Soft SPL
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="options" id="Distance to Goal" autocomplete="off"> Distance to Goal
+            </label>
+        </div>
+        <div id="prediction-correction" style="width:100%; height: 300px"></div>
+    </div>
 </div>
 <p>
-  <a class="btn btn-link" data-toggle="collapse" href="#detail-kalman" role="button" aria-expanded="false"
-     aria-controls="details-kalman">
-    Click here for more details
-    <i class="fas fa-angle-down rotate-icon"></i>
-  </a>
+    <a class="btn btn-link" data-toggle="collapse" href="#detail-kalman" role="button" aria-expanded="false"
+       aria-controls="details-kalman">
+        Click here for more details
+        <i class="fas fa-angle-down rotate-icon"></i>
+    </a>
 </p>
 <div class="row">
-  <div class="col">
-    <div class="collapse multi-collapse" id="detail-kalman">
-      <div class="card card-body">
-        <p>
-          This plot reproduce figure 2 from the paper. Our goal is to measure how much the agent
-          relies on <b>prediction</b> VS. <b>correction</b> to estimate its current pose, akin to
-          a Kalman filter. To do so, we evaluate the agent's performance in different environments
-          with <b>corrupted dynamics / observations</b>
-        </p>
-        <img src="assets/metric.svg" class="img-fluid" alt="Kalman filter"/>
-        <p>
-          Since environment parameters vary in scale and meaning, we use a <b>distance to belief</b>
-          metric to unify their effects on agent performance. This metric measures the average spatial
-          difference between agent positions in the corrupted and training environments over 1,000
-          five-second action sequences.
-        </p>
+    <div class="col">
+        <div class="collapse multi-collapse" id="detail-kalman">
+            <div class="card card-body">
+                <p>
+                    This plot reproduce figure 2 from the paper. Our goal is to measure how much the agent
+                    relies on <b>prediction</b> VS. <b>correction</b> to estimate its current pose, akin to
+                    a Kalman filter. To do so, we evaluate the agent's performance in different environments
+                    with <b>corrupted dynamics / observations</b>
+                </p>
+                <img src="assets/metric.svg" class="img-fluid" alt="Kalman filter"/>
+                <p>
+                    Since environment parameters vary in scale and meaning, we use a <b>distance to belief</b>
+                    metric to unify their effects on agent performance. This metric measures the average spatial
+                    difference between agent positions in the corrupted and training environments over 1,000
+                    five-second action sequences.
+                </p>
 
-        <div class="card">
-          <div class="card-header text-white bg-primary">
-            <h5 class="card-title">How to use</h5>
-          </div>
-          <div class="card-body">
-            <ul class="card-text list-group list-group-flush">
-              <li class="list-group-item"><b>Change the metric</b> used on the Y axis by clicking on
-                the button above,
-              </li>
-              <li class="list-group-item"><b>Hover</b> a point for more details,</li>
-              <li class="list-group-item"><b>A tooltip appears</b> showing 4 examples of distance to
-                belief,
-              </li>
-              <li class="list-group-item">The dotted line corresponds to the <b>corrupted dynamics</b>,
-              </li>
-              <li class="list-group-item">The <i>distance to belief</i> is proportional to the area
-                between the paths.
-              </li>
-            </ul>
-          </div>
+                <div class="card">
+                    <div class="card-header text-white bg-primary">
+                        <h5 class="card-title">How to use</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="card-text list-group list-group-flush">
+                            <li class="list-group-item"><b>Change the metric</b> used on the Y axis by clicking on
+                                the button above,
+                            </li>
+                            <li class="list-group-item"><b>Hover</b> a point for more details,</li>
+                            <li class="list-group-item"><b>A tooltip appears</b> showing 4 examples of distance to
+                                belief,
+                            </li>
+                            <li class="list-group-item">The dotted line corresponds to the <b>corrupted dynamics</b>,
+                            </li>
+                            <li class="list-group-item">The <i>distance to belief</i> is proportional to the area
+                                between the paths.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 
 <script src="script.js"></script>

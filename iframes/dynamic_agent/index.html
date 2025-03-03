@@ -5,352 +5,360 @@
     <title>Dynamical Agent</title>
 
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-          integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-          crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-          integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-          crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
 
-  <!-- MathJax -->
-  <script type="text/javascript" id="MathJax-script" async
-          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
+    <!-- MathJax -->
+    <script type="text/javascript" id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
-          integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-          crossorigin="anonymous"></script>
-  <style>
-    .dynamic-tool{
-      height:300px
-    }
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+    <style>
+        body {
+            background-color: transparent;
+        }
 
-    /* Styling for the slider grid */
-    .slider-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 30px;
-      background-color: #EFEFEF;
-      padding: 5px;
-      border-radius: 5px;
-      margin-left: 0;
-      margin-right: 0;
-    }
+        .card {
+            background-color: transparent;
+        }
 
-    /* Each slider block */
-    .slider-block {
-      margin-top: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
+        .dynamic-tool {
+            height: 300px
+        }
 
-    .slider-block label {
-      font-size: 12px;
-      color: #333;
-      padding-right: 5px;
-    }
+        /* Styling for the slider grid */
+        .slider-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 30px;
+            background-color: rgb(0, 0, 0, 0.05);
+            padding: 5px;
+            border-radius: 5px;
+            margin-left: 0;
+            margin-right: 0;
+        }
 
-    .slider {
-      -webkit-appearance: none;
-      width: 100%;
-      height: 8px;
-      background: #ddd;
-      border-radius: 4px;
-      outline: none;
-      opacity: 0.8;
-      transition: opacity 0.2s;
-      margin: 5px 0;
-    }
+        /* Each slider block */
+        .slider-block {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
 
-    .slider-info {
-      font-size: 12px;
-      color: #555;
-      display: flex;
-      justify-content: space-between;
-      align-content: center;
-      align-items: flex-start;
-    }
+        .slider-block label {
+            font-size: 12px;
+            color: #333;
+            padding-right: 5px;
+        }
 
-    .slider:hover {
-      opacity: 1;
-    }
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #ddd;
+            border-radius: 4px;
+            outline: none;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+            margin: 5px 0;
+        }
 
-    .slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
-      background: #007bff;
-      border-radius: 50%;
-      cursor: pointer;
-    }
+        .slider-info {
+            font-size: 12px;
+            color: #555;
+            display: flex;
+            justify-content: space-between;
+            align-content: center;
+            align-items: flex-start;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #007bff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
 
 
-    /* Main damping slider styling */
-    .main-slider-container {
-      margin-top: 10px;
-    }
+        /* Main damping slider styling */
+        .main-slider-container {
+            margin-top: 10px;
+        }
 
-    .main-slider-container label {
-      font-size: 16px;
-      font-weight: bold;
-      color: #333;
-    }
+        .main-slider-container label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
 
-  </style>
+    </style>
 </head>
 <body>
 <div class="card mt-4">
-  <div class="card-header">
-    <h5 class="card-title">Dynamical model playground</h5>
-    <p class="card-subtitle">Observe the behavior of the dynamics for different parameters on the trajectory and
-      action space of the agent.
-    </p>
-  </div>
-  <div class="card-body">
-    <div class="row">
-      <div class="col m-0 p-0">
-        <h4 class="text-center">Step response</h4>
-        <div class="dynamic-tool" id="dyn-step-response"></div>
-      </div>
-      <div class="col m-0 p-0">
-        <h4 class="text-center">Sample trajectory</h4>
-        <div class="dynamic-tool" id="dyn-sample-traj"></div>
-      </div>
-      <div class="col m-0 p-0">
-        <h4 class="text-center">Action space</h4>
-        <div class="dynamic-tool" id="dyn-action-space"></div>
-      </div>
+    <div class="card-header">
+        <h5 class="card-title">Dynamical model playground</h5>
+        <p class="card-subtitle">Observe the behavior of the dynamics for different parameters on the trajectory and
+            action space of the agent.
+        </p>
     </div>
-
-    <div class="row mt-3">
-      <div class="col">
-        <!-- Grid of sliders for damping factors -->
-        <div class="main-slider-container">
-          <div class="slider-info">
-            <label for="damp-slider">Damping</label>
-          </div>
-          <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
-                 id="damp-slider">
-        </div>
-        <div class="slider-grid">
-          <div class="slider-block">
-            <div class="slider-info">
-              <label for="damp-lin-brk-slider">Linear (Brk.): </label>
-              <div id="damp-lin-brk-value">0.7</div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col m-0 p-0">
+                <h4 class="text-center">Step response</h4>
+                <div class="dynamic-tool" id="dyn-step-response"></div>
             </div>
-            <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
-                   id="damp-lin-brk-slider">
-          </div>
-          <div class="slider-block">
-            <div class="slider-info">
-              <label for="damp-ang-brk-slider">Angular (Brk.): </label>
-              <div id="damp-ang-brk-value">0.7</div>
+            <div class="col m-0 p-0">
+                <h4 class="text-center">Sample trajectory</h4>
+                <div class="dynamic-tool" id="dyn-sample-traj"></div>
             </div>
-            <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
-                   id="damp-ang-brk-slider">
-          </div>
-          <div class="slider-block">
-            <div class="slider-info">
-              <label for="damp-lin-acc-slider">Linear (Acc.)</label>
-              <div id="damp-lin-acc-value">0.7</div>
+            <div class="col m-0 p-0">
+                <h4 class="text-center">Action space</h4>
+                <div class="dynamic-tool" id="dyn-action-space"></div>
             </div>
-            <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
-                   id="damp-lin-acc-slider">
-          </div>
-          <div class="slider-block">
-            <div class="slider-info">
-              <label for="damp-ang-acc-slider">Angular (Acc.)</label>
-              <div id="damp-ang-acc-value">0.7</div>
-            </div>
-            <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
-                   id="damp-ang-acc-slider">
-          </div>
-        </div>
-      </div>
-
-      <div class="col">
-        <!-- Grid of sliders for damping factors -->
-        <div class="main-slider-container">
-          <div class="slider-info">
-            <label for="time-slider">Response time</label>
-          </div>
-          <input type="range" min="0" max="1" step="0.01" value="0.7" class="slider" id="time-slider">
-        </div>
-        <div class="slider-grid">
-          <div class="slider-block">
-            <div class="slider-info">
-              <label for="time-lin-brk-slider">Linear (Brk.): </label>
-              <div id="time-lin-brk-value">0.7</div>
-              <span style="padding-left:1px">s</span>
-            </div>
-            <input type="range" min="0.0024" max="1.2" step="0.01" value="0.7" class="slider"
-                   id="time-lin-brk-slider">
-          </div>
-          <div class="slider-block">
-            <div class="slider-info">
-              <label for="time-ang-brk-slider">Angular (Brk.): </label>
-              <div id="time-ang-brk-value">0.7</div>
-              <span style="padding-left:1px">s</span>
-            </div>
-            <input type="range" min="0.0028" max="1.4" step="0.01" value="0.7" class="slider"
-                   id="time-ang-brk-slider">
-          </div>
-          <div class="slider-block">
-            <div class="slider-info">
-              <label for="time-lin-acc-slider">Linear (Acc.)</label>
-              <div id="time-lin-acc-value">0.7</div>
-              <span style="padding-left:1px">s</span>
-            </div>
-            <input type="range" min="0.0026" max="1.3" step="0.01" value="0.7" class="slider"
-                   id="time-lin-acc-slider">
-          </div>
-          <div class="slider-block">
-            <div class="slider-info">
-              <label for="time-ang-acc-slider">Angular (Acc.)</label>
-              <div id="time-ang-acc-value">0.7</div>
-              <span style="padding-left:1px">s</span>
-            </div>
-            <input type="range" min="0.0027" max="1.35" step="0.01" value="0.7" class="slider"
-                   id="time-ang-acc-slider">
-          </div>
-        </div>
-      </div>
-
-
-      <div class="col">
-        <!-- Grid of sliders for damping factors -->
-        <div class="main-slider-container">
-          <div class="slider-info">
-            <label>Maximum Velocity</label>
-          </div>
-        </div>
-        <div class="slider-grid">
-          <div class="slider-block">
-            <div class="slider-info">
-              <label for="lin-maxvel-slider">Linear: </label>
-              <div id="lin-maxvel-value">0.996</div>
-              <span style="padding-left:1px">m/s</span>
-            </div>
-            <input type="range" min="0.0996" max="3.486" step="0.01" value="0.996" class="slider"
-                   id="lin-maxvel-slider">
-          </div>
-          <div class="slider-block">
-            <div class="slider-info">
-              <label for="ang-maxvel-slider">Angular: </label>
-              <div id="ang-maxvel-value">2.914</div>
-              <span style="padding-left:1px">rad/s</span>
-            </div>
-            <input type="range" min="0.2914" max="10.199" step="0.01" value="2.914" class="slider"
-                   id="ang-maxvel-slider">
-          </div>
         </div>
 
-        <div class="slider-block">
-          <!--                        reset button-->
-          <button class="btn btn-primary" id="reset-button">Reset</button>
+        <div class="row mt-3">
+            <div class="col">
+                <!-- Grid of sliders for damping factors -->
+                <div class="main-slider-container">
+                    <div class="slider-info">
+                        <label for="damp-slider">Damping</label>
+                    </div>
+                    <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
+                           id="damp-slider">
+                </div>
+                <div class="slider-grid">
+                    <div class="slider-block">
+                        <div class="slider-info">
+                            <label for="damp-lin-brk-slider">Linear (Brk.): </label>
+                            <div id="damp-lin-brk-value">0.7</div>
+                        </div>
+                        <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
+                               id="damp-lin-brk-slider">
+                    </div>
+                    <div class="slider-block">
+                        <div class="slider-info">
+                            <label for="damp-ang-brk-slider">Angular (Brk.): </label>
+                            <div id="damp-ang-brk-value">0.7</div>
+                        </div>
+                        <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
+                               id="damp-ang-brk-slider">
+                    </div>
+                    <div class="slider-block">
+                        <div class="slider-info">
+                            <label for="damp-lin-acc-slider">Linear (Acc.)</label>
+                            <div id="damp-lin-acc-value">0.7</div>
+                        </div>
+                        <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
+                               id="damp-lin-acc-slider">
+                    </div>
+                    <div class="slider-block">
+                        <div class="slider-info">
+                            <label for="damp-ang-acc-slider">Angular (Acc.)</label>
+                            <div id="damp-ang-acc-value">0.7</div>
+                        </div>
+                        <input type="range" min="0.007" max="7.0" step="0.01" value="0.7" class="slider"
+                               id="damp-ang-acc-slider">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <!-- Grid of sliders for damping factors -->
+                <div class="main-slider-container">
+                    <div class="slider-info">
+                        <label for="time-slider">Response time</label>
+                    </div>
+                    <input type="range" min="0" max="1" step="0.01" value="0.7" class="slider" id="time-slider">
+                </div>
+                <div class="slider-grid">
+                    <div class="slider-block">
+                        <div class="slider-info">
+                            <label for="time-lin-brk-slider">Linear (Brk.): </label>
+                            <div id="time-lin-brk-value">0.7</div>
+                            <span style="padding-left:1px">s</span>
+                        </div>
+                        <input type="range" min="0.0024" max="1.2" step="0.01" value="0.7" class="slider"
+                               id="time-lin-brk-slider">
+                    </div>
+                    <div class="slider-block">
+                        <div class="slider-info">
+                            <label for="time-ang-brk-slider">Angular (Brk.): </label>
+                            <div id="time-ang-brk-value">0.7</div>
+                            <span style="padding-left:1px">s</span>
+                        </div>
+                        <input type="range" min="0.0028" max="1.4" step="0.01" value="0.7" class="slider"
+                               id="time-ang-brk-slider">
+                    </div>
+                    <div class="slider-block">
+                        <div class="slider-info">
+                            <label for="time-lin-acc-slider">Linear (Acc.)</label>
+                            <div id="time-lin-acc-value">0.7</div>
+                            <span style="padding-left:1px">s</span>
+                        </div>
+                        <input type="range" min="0.0026" max="1.3" step="0.01" value="0.7" class="slider"
+                               id="time-lin-acc-slider">
+                    </div>
+                    <div class="slider-block">
+                        <div class="slider-info">
+                            <label for="time-ang-acc-slider">Angular (Acc.)</label>
+                            <div id="time-ang-acc-value">0.7</div>
+                            <span style="padding-left:1px">s</span>
+                        </div>
+                        <input type="range" min="0.0027" max="1.35" step="0.01" value="0.7" class="slider"
+                               id="time-ang-acc-slider">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col">
+                <!-- Grid of sliders for damping factors -->
+                <div class="main-slider-container">
+                    <div class="slider-info">
+                        <label>Maximum Velocity</label>
+                    </div>
+                </div>
+                <div class="slider-grid">
+                    <div class="slider-block">
+                        <div class="slider-info">
+                            <label for="lin-maxvel-slider">Linear: </label>
+                            <div id="lin-maxvel-value">0.996</div>
+                            <span style="padding-left:1px">m/s</span>
+                        </div>
+                        <input type="range" min="0.0996" max="3.486" step="0.01" value="0.996" class="slider"
+                               id="lin-maxvel-slider">
+                    </div>
+                    <div class="slider-block">
+                        <div class="slider-info">
+                            <label for="ang-maxvel-slider">Angular: </label>
+                            <div id="ang-maxvel-value">2.914</div>
+                            <span style="padding-left:1px">rad/s</span>
+                        </div>
+                        <input type="range" min="0.2914" max="10.199" step="0.01" value="2.914" class="slider"
+                               id="ang-maxvel-slider">
+                    </div>
+                </div>
+
+                <div class="slider-block">
+                    <!--                        reset button-->
+                    <button class="btn btn-primary" id="reset-button">Reset</button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 
 <p>
-  <a class="btn btn-link" data-toggle="collapse" href="#detail-dynamics" role="button" aria-expanded="false"
-     aria-controls="details-dynamics">
-    Click here for more details
-    <i class="fas fa-angle-down rotate-icon"></i>
-  </a>
+    <a class="btn btn-link" data-toggle="collapse" href="#detail-dynamics" role="button" aria-expanded="false"
+       aria-controls="details-dynamics">
+        Click here for more details
+        <i class="fas fa-angle-down rotate-icon"></i>
+    </a>
 </p>
 <div class="row">
-  <div class="col">
-    <div class="collapse multi-collapse" id="detail-dynamics">
-      <div class="card card-body">
-        <p class="mb-0">
-          We simulate the robot's behavior using a <b>second order dynamical model</b>:
-          \[
-          \begin{array}{ll}
+    <div class="col">
+        <div class="collapse multi-collapse" id="detail-dynamics">
+            <div class="card card-body">
+                <p class="mb-0">
+                    We simulate the robot's behavior using a <b>second order dynamical model</b>:
+                    \[
+                    \begin{array}{ll}
 
-          \ddot v(t) &= \frac{1}{\tau} \big(v(t) - c_v(t)\big) + \frac{2\gamma}{\tau} \dot v(t) \\
-          \ddot \omega(t) &= \frac{1}{\tau} \big(\omega(t) - c_\omega(t)\big) + \frac{2\gamma}{\tau} \dot
-          \omega(t)
-          \end{array}
-          \]
-          where
-        </p>
-        <ul class="list-group mt-0" style="margin-left: 30px">
-          <li> \(v(t)\) and \(\omega(t)\) are the robot’s linear and angular velocities at time \(t\),
-          </li>
-          <li> \(\tau\) and \(\gamma\) represent the damping and response time of the model, and
-          </li>
-          <li> \(c_v(t)\) and \(c_\omega(t)\) are the commands for linear and angular velocities.
-          </li>
-        </ul>
-
-        <p class="mt-1">
-          These parameters are based on real data collected from the robot.
-          Different damping and response time values are applied depending on the action type
-          (<b>acceleration</b> or <b>braking</b>) and motion type (<b>linear</b> or <b>angular</b>).
-        </p>
-
-        <div class="row w-100">
-          <div class="col">
-            <div class="card">
-              <div class="card-header text-white bg-primary">
-                <h5 class="card-title">Step response</h5>
-              </div>
-              <div class="card-body">
-                <div class="card-text">
-                  Step response shows how the dynamics react to a sudden command change:
-
-                  <ul class="list-group pl-4 mt-0">
-                    <li> First 5 seconds: target velocities are 0.7 m/s (linear) and 2.0 rad/s
-                      (angular).
+                    \ddot v(t) &= \frac{1}{\tau} \big(v(t) - c_v(t)\big) + \frac{2\gamma}{\tau} \dot v(t) \\
+                    \ddot \omega(t) &= \frac{1}{\tau} \big(\omega(t) - c_\omega(t)\big) + \frac{2\gamma}{\tau} \dot
+                    \omega(t)
+                    \end{array}
+                    \]
+                    where
+                </p>
+                <ul class="list-group mt-0" style="margin-left: 30px">
+                    <li> \(v(t)\) and \(\omega(t)\) are the robot’s linear and angular velocities at time \(t\),
                     </li>
-                    <li> Next 5 seconds: target velocities are reset to 0.0 m/s and 0.0 rad/s.
+                    <li> \(\tau\) and \(\gamma\) represent the damping and response time of the model, and
                     </li>
-                  </ul>
+                    <li> \(c_v(t)\) and \(c_\omega(t)\) are the commands for linear and angular velocities.
+                    </li>
+                </ul>
+
+                <p class="mt-1">
+                    These parameters are based on real data collected from the robot.
+                    Different damping and response time values are applied depending on the action type
+                    (<b>acceleration</b> or <b>braking</b>) and motion type (<b>linear</b> or <b>angular</b>).
+                </p>
+
+                <div class="row w-100">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header text-white bg-primary">
+                                <h5 class="card-title">Step response</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-text">
+                                    Step response shows how the dynamics react to a sudden command change:
+
+                                    <ul class="list-group pl-4 mt-0">
+                                        <li> First 5 seconds: target velocities are 0.7 m/s (linear) and 2.0 rad/s
+                                            (angular).
+                                        </li>
+                                        <li> Next 5 seconds: target velocities are reset to 0.0 m/s and 0.0 rad/s.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header text-white bg-primary">
+                                <h5 class="card-title">Sample trajectory</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text"> The sample trajectory replays actions that drive the robot
+                                    from a red dot to a green dot.
+                                    Adjusting dynamics parameters will impact the trajectory. It highlights the long
+                                    term effect
+                                    of changes in the dynamical parameters.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header text-white bg-primary">
+                                <h5 class="card-title">Action space</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text"> The action space consists of 28 discrete actions, each with a
+                                    specific linear and angular
+                                    velocity. For each action, we show the robot's displacement after 1 second,
+                                    starting from
+                                    position (0, 0) and an initial speed of 1.0 m/s.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-          <div class="col">
-            <div class="card">
-              <div class="card-header text-white bg-primary">
-                <h5 class="card-title">Sample trajectory</h5>
-              </div>
-              <div class="card-body">
-                <p class="card-text"> The sample trajectory replays actions that drive the robot
-                  from a red dot to a green dot.
-                  Adjusting dynamics parameters will impact the trajectory. It highlights the long
-                  term effect
-                  of changes in the dynamical parameters.</p>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card">
-              <div class="card-header text-white bg-primary">
-                <h5 class="card-title">Action space</h5>
-              </div>
-              <div class="card-body">
-                <p class="card-text"> The action space consists of 28 discrete actions, each with a
-                  specific linear and angular
-                  velocity. For each action, we show the robot's displacement after 1 second,
-                  starting from
-                  position (0, 0) and an initial speed of 1.0 m/s.</p>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 
 <script src="script.js"></script>
